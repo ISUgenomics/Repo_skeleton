@@ -7,9 +7,6 @@
 
 ### Nanopore Reads
 
-* Nova
-/work/gif/archiveNova/Zengyi_2021/
-
 ### Pacbio Reads
 
 ### Hi-C data
