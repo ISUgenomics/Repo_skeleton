@@ -8,9 +8,9 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Genomics
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------|  
-| [ x ] | **notebook_genome_assembly/**   | de novo genome assembly from long or short reads  
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------|  
+| [  ] | **notebook_genome_assembly/**   | de novo genome assembly from long or short reads  
 | [  ] | **notebook_genome_annotation/**  | structural and functional genome annotation  
 | [  ] | **notebook_wgs/**                | whole genome resequencing analysis pipeline  
 | [  ] | **notebook_wes/**                | whole exome sequencing pipeline  
@@ -20,9 +20,9 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Transcriptomics
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
-[ x ] | **notebook_bulk_rnaseq/**            | differential expression analysis of bulk RNA-Seq data  
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
+[x] | [**notebook_bulk_rnaseq/**](notebook_bulk_rnaseq/)            | differential expression analysis of bulk RNA-Seq data  
 [  ] | **notebook_total_rnaseq/**           | total rnaseq including non-coding and ribo-depleted data  
 [  ] | **notebook_small_rnaseq/**           | analysis of small RNAs such as miRNAs and piRNA  
 [  ] | **notebook_singlecell_rnaseq/**      | (single-cell) scRNA-seq clustering, annotation and visualization  
@@ -32,8 +32,8 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Epigenomics & Regulatory
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
 [  ] | **notebook_chip_seq/**             | transcription factor or histone ChIP-seq analysis  
 [  ] | **notebook_atac_seq/**             | analysis of chromatin accessibility using ATAC-seq  
 [  ] | **notebook_methylation_seq/**      | bisulfite sequencing or array-based dna methylation analysis  
@@ -43,8 +43,8 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Microbiome & Metagenomics
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
 [  ] | **notebook_16s/**                  | amplicon-based microbiome profiling using 16S rRNA  
 [  ] | **notebook_metagenomics/**         | shotgun metagenome analysis including taxonomy and function  
 [  ] | **notebook_metatranscriptomics/**  | expression profiling of microbial communities from RNA  
@@ -53,8 +53,8 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Functional & Comparative
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
 [  ] | **notebook_functional_enrichment/** | GO, KEGG or Pfam-based pathway and functional enrichment  
 [  ] | **notebook_synteny/**               | comparative genome alignment and synteny block analysis  
 [  ] | **notebook_phylogenomics/**         | phylogenetic tree construction from genome-scale data  
@@ -62,16 +62,16 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 ### Proteomics
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
 [  ] | **notebook_proteomics/**          | identification and quantification of proteins from LC-MS/MS data  
 [  ] | **notebook_phosphoproteomics/**   | analysis of post-translational modifications (PTMs) like phosphorylation  
 
 
 ### Specialized & Advanced
 
-| *made* | *template notebook* | *description* |
-|--------|---------------------|---------------| 
+| *ready* | *template notebook* | *description* |
+|---------|---------------------|---------------| 
 [  ] | **notebook_crispr_screen/**       | analysis of CRISPR pooled screens and gene knockout studies  
 [  ] | **notebook_clinical_genomics/**   | variant interpretation using clinical and pathogenicity guidelines  
 [  ] | **notebook_qtl_mapping/**         | discovery of eQTLs, sQTLs or methylation QTLs  

@@ -78,7 +78,7 @@ To initialize your own project with this template structure:
 
 **Option 1: Download from GitHub**
 
-1. Navigate to the [`Repo_skeleton/notebook_bulk_rnaseq/`](https://github.com/ISUgenomics/Repo_skeleton/tree/main/notebook_bulk_rnaseq) folder on GitHub.
+1. Navigate to the [`Repo_skeleton/notebook_bulk_rnaseq/`](https://github.com/ISUgenomics/Repo_skeleton/tree/master/notebook_bulk_rnaseq) folder on GitHub.
 2. Click the green **“Code”** button → **“Download ZIP”**.
 3. Extract the ZIP file and move the `notebook_bulk_rnaseq/` folder into your project directory.
 4. You can rename the folder, if needed.

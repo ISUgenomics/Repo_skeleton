@@ -111,7 +111,6 @@ end
 
 Default steps relevant to bulk RNA-seq project are selected:
 
-```markdown
 [x] 00_raw_data/               - download and verify raw FASTQ files  
 [x] 01_read_qc/                - raw read quality control  
 [x] 02_trimming/               - adapter and quality trimming  
@@ -122,7 +121,7 @@ Default steps relevant to bulk RNA-seq project are selected:
 [ ] 07_fusion_detection/       - fusion transcript detection  
 [x] final_report/              - workflow summary and figures for manuscript  
 
-Update the list with [x] or [ ] to match your analysis plan
+Update the list with [x] or [ ] to match your analysis plan.
 
 
 ### Remove unused folders
