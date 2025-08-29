@@ -20,9 +20,9 @@ This template defines a structured directory layout for performing **bulk RNA-se
 - Facilitate reproducibility and consistency
 - Capture documentation to support manuscript writing
 
-RNA sequencing (RNA-seq) s a widely used approach for quantifying gene expression, detecting alternative splicing, allele-specific expression, fusion events, and more. This template supports standard and advanced workflows and is aligned with current best practices. This structure is optimized for **bulk RNA-seq only**. For scRNA-seq, see a separate template (notebook_singlecell_rnaseq/).
+RNA sequencing (RNA-seq) is a widely used approach for quantifying gene expression, detecting alternative splicing, allele-specific expression, fusion events, and more. This template supports standard and advanced workflows and is aligned with current best practices. This structure is optimized for **bulk RNA-seq only**. For scRNA-seq, see a separate template (notebook_singlecell_rnaseq/).
 
-Refer to the [Transcriptomics (RNA-seq)](http://localhost:4000/02-rna/transcriptomics/00-landing-page-transcriptomics/) module in the Bioinformatics Workbook for step-by-step instructions.
+Refer to the [Transcriptomics (RNA-seq)](http://localhost:4000/02-rna/transcriptomics/00-landing-page-transcriptomics/) module in the Bioinformatics Workbook for step-by-step tutorials providing instructions to each step in the pipeline.
 
 ### How to use this template?
 
@@ -30,7 +30,7 @@ This file structure includes **all core and optional analysis steps**. To adapt 
 
 1. Review the [pipeline decision tree](#pipeline-decision-tree) and [step checklist](#step-selection-checklist).
 2. [Remove unused folders](#remove-unused-folders) to simplify your working directory.  
-3. [Document your process](#folder-by-folder-documentation) n each step's `README.md` using a standardized format.
+3. [Document your process](#folder-by-folder-documentation) in each step's `README.md` using a standardized format.
 
 
 ## Decide on steps & tools in your workflow
