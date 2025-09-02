@@ -51,7 +51,9 @@ Describe the **biological context** and purpose of the study. What is the key sc
 
 ```text
 EXAMPLE  
-The goal of this project is to characterize transcriptomic changes resulting from the loss of ATRX histone chaperone function in Arabidopsis thaliana. ATRX is involved in chromatin remodeling and transcriptional regulation, and its disruption is expected to affect gene expression networks linked to development and stress response.
+The goal of this project is to characterize transcriptomic changes resulting from the loss of ATRX histone chaperone function 
+in Arabidopsis thaliana. ATRX is involved in chromatin remodeling and transcriptional regulation, 
+and its disruption is expected to affect gene expression networks linked to development and stress response.
 
 The experiment involves bulk RNA sequencing of whole seedlings from two genotypes:
 - Wild-type (WT) plants (3 samples)
@@ -95,7 +97,7 @@ Summarize 1-5 **key tasks** of this project. Use ✅ checkboxes to track progres
 
 ### Expected Deliverables
 
-List the expected outputs for this project:
+List the expected outputs for this project. Use ✅ checkboxes to mark selections.
 
 - ⬜ Sample-level QC metrics and summary reports
 - ⬜ Gene expression matrices (raw + normalized)
