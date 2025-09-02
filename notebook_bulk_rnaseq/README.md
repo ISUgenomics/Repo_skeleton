@@ -29,8 +29,7 @@ Each `.md` file in the root directory is intended to support scientific reportin
 | 06_Discussion.md      | paper      | manuscript discussion section                                                       |
 | 07_Supplementary.md   | paper      | (optional) supplementary results, extended figures and additional methods           |
 | 08_References.md      | paper      | bibliography and references; defaults for methods pre-filled                        |
-| 09_AuthorInfo.md      | paper      | author list, contributions, affiliations                                            |
-| 10_Acknowledgements.md| paper      | acknowledgements: funding, grants, institutional support, thanks                    |
+| 09_AuthorInfo.md      | paper      | author list, contributions, affiliations, funding, grants, thanks                   |
 | **README.md**         | general    | (this file) overview of the template and how to use it; project structure           |
 | othernotes.md         | general    | scratchpad for miscellaneous notes, ideas and to-dos                                |
 
@@ -76,12 +75,20 @@ workflow/                         # root folder for your RNA-Seq project; custom
 
 To initialize your own project with this template structure:
 
-**Option 1: Download from GitHub**
+**Option 1: Download from GitHub Explorer**
 
 1. Navigate to the [`Repo_skeleton/notebook_bulk_rnaseq/`](https://github.com/ISUgenomics/Repo_skeleton/tree/master/notebook_bulk_rnaseq) folder on GitHub.
-2. Click the green **“Code”** button → **“Download ZIP”**.
-3. Extract the ZIP file and move the `notebook_bulk_rnaseq/` folder into your project directory.
+2. Press `.` (dot) on your keyboard or modify the URL address manually by replacing `.com` with `.dev`
+```text
+https://github.dev/ISUgenomics/Repo_skeleton/tree/master/notebook_bulk_rnaseq
+```
+*This will open the repo in the GitHub’s internal VSC editor directly in the browser window.*  
+![download_repo](assets/download_repo.png)
+
+3. On the left-hand side, you can see the Explorer menu. Find the **notebook_bulk_rnaseq** folder and right-click on it to display the dialog box. Then click on the **Download...** option and select the location on your file system to save the content.
 4. You can rename the folder, if needed.
+
+
 
 **Option 2: Clone only the subdirectory**
 
