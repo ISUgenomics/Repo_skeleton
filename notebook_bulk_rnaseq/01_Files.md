@@ -56,7 +56,7 @@ sequencing mode: **paired-end reads**
 |-----------|-----------|--------|---------------|----------|
 | Genome FASTA | [TAIR10_chr_all.fas.gz](https://www.arabidopsis.org/api/download-files/download?filePath=Genes/TAIR10_genome_release/TAIR10_chromosome_files/TAIR10_chr_all.fas.gz) | [TAIR, 10 release](https://www.arabidopsis.org/download/overview) | Alignment, ASE, Fusion detection | `/work/gif4/user/project/refernce/` |
 | Annotation GTF | Arabidopsis_thaliana.TAIR10.56.gtf | Ensembl Plants (release 56) | FeatureCounts, Salmon, HTSeq | `/work/gif4/user/project/03_alignment/ref_assembly/` |
-| Transcriptome Index | salmon_index/ | Built using `salmon index` | Quantification (alignment-free) |`/work/gif4/user/project/04_quantification/` |
+| Reference Index | ref_index/ | genome or transcriptome `index` | Quantification |`/work/gif4/user/project/04_quantification/` |
 
 ---
 
