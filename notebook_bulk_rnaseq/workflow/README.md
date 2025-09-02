@@ -71,7 +71,7 @@ direction TB
     ifAlign -->| No | M
     subgraph A["alignment-based track"]
       direction TB
-      subgraph AA["a"]
+      subgraph AA["alignment-based track"]
         direction LR
         Align["Read Alignment<br>(splice-aware)"] <--> QC2["Alignment QC"]  
       end
@@ -96,7 +96,7 @@ direction TB
     FUSION["Fusion Transcript Detection"] --> FUSanno["COSMIC / Oncogenic Annotation"] 
   end
   
-  Reads -. trimmed reads (FASTQ) .-> BioTasks
+  Reads -. trimmed reads (FASTQ) .-> ifAlign
   M -. estimated counts, transcript TPM .-> D1
   Quant -. gene counts, transcript TPM/FPKM .-> D1
   ifBam -.-> StatModel 
