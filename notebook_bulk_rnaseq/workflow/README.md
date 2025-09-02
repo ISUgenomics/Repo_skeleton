@@ -51,61 +51,7 @@ Each folder in the structure corresponds to a logical step in a typical bulk RNA
 
 ### Pipeline Decision Tree
 
-```mermaid
-flowchart LR
-
-subgraph TOP["<b style="line-height: 0.1rem !important; font-size: 1rem;">RNA-Seq Workflow &emsp; &emsp; </b>"]
-direction TB
-  subgraph Reads["Reads pre-processing"]
-    direction LR
-    RawReads["Raw RNA reads<br/>(FASTQ)"] --> QC1["Read QC"] <--> Trim["Read Trimming<br/>(FASTQ)"]
-  end
-
-  subgraph BioTasks["<i>Need Alignment (BAM files)?</i>"]
-    direction TB
-    ifAlign((("?")))
-    subgraph M["alignment-free track"]
-      direction LR
-      Qmap["Quasi-mapping"]
-    end 
-    ifAlign -->| No | M
-    subgraph A["alignment-based track"]
-      direction TB
-      subgraph AA["alignment-based track"]
-        direction LR
-        Align["Read Alignment<br>(splice-aware)"] <--> QC2["Alignment QC"]  
-      end
-      subgraph ifBam["<i>Planning DS, ASE, Fusion or IGV review?</i>"]
-      direction TB
-        ifB((("?")))
-      end 
-      AA -. aligned reads (BAM/CRAM) .-> Quant["Expression Quantification"]
-      AA -. aligned reads (BAM/CRAM) .-> ifBam
-    end   
-    ifAlign -->| Yes | A 
-  end
-
-  subgraph D1["Gene Expression Modeling"]
-    direction TB
-    DGE["Differential Gene Expression (DGE)"] --> DGEdown["Functional & Enrichment Analysis<br/>(GO, KEGG, GSEA, networks)"]
-  end  
-
-  subgraph StatModel["Specialized Downstream"]
-  direction TB
-    ASE["Allele-Specific Expression (ASE)"] --> ASEanno["Annotation & Overlap"]
-    FUSION["Fusion Transcript Detection"] --> FUSanno["COSMIC / Oncogenic Annotation"] 
-  end
-  
-  Reads -. trimmed reads (FASTQ) .-> ifAlign
-  M -. estimated counts, transcript TPM .-> D1
-  Quant -. gene counts, transcript TPM/FPKM .-> D1
-  ifBam -.-> StatModel 
-end
-
-%% Styling
-  classDef whitebox fill:#ffffff,stroke:#333,stroke-width:0px;
-  class TOP whitebox;
-```
+![RNA-Sew workflow decision tree](../assets/rnaseq-workflow.png)
 
 ### Step selection checklist
 
