@@ -1,0 +1,2 @@
+comparison_id,grouping_column,group1,group2,use_qvalue,pvalue_cutoff,qvalue_cutoff,abs_log2fc_cutoff,enabled,notes
+fill_in_comparison_01,fill_in_grouping_column,fill_in_group_a,fill_in_group_b,TRUE,0.05,0.05,1,TRUE,

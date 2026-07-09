@@ -1,0 +1,20 @@
+name: notebook_proteomics
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pandas
+  - numpy
+  - scipy
+  - statsmodels
+  - scikit-learn
+  - plotly>=6.1
+  - python-kaleido>=1.0
+  - seaborn
+  - matplotlib
+  - tqdm
+  - openpyxl
+  - pyyaml
+  - notebook
+  - jupyterlab
+

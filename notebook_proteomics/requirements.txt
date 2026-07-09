@@ -1,0 +1,15 @@
+pandas
+numpy
+scipy
+statsmodels
+scikit-learn
+plotly>=6.1
+kaleido>=1.0
+seaborn
+matplotlib
+tqdm
+openpyxl
+PyYAML
+notebook
+jupyterlab
+

@@ -1,0 +1,2 @@
+sample_id,source_column,treatment,group,replicate,batch_or_run,include,notes
+fill_in_sample_01,fill_in_source_column_01,fill_in_treatment,fill_in_group,1,fill_in_run,TRUE,

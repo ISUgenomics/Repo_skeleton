@@ -1,0 +1,63 @@
+# Edit this file in place.
+# Fill project-specific values before execution.
+# Paths are expected to be relative to the copied notebook_proteomics project root.
+
+project:
+  # Stable identifiers and context for this project.
+  project_id: "fill_in_project_id"
+  project_title: "fill_in_project_title"
+  organism: "fill_in_organism"
+  material: "fill_in_material"
+  analysis_owner: "fill_in_analysis_owner"
+
+inputs:
+  # provider_export is the main analysis input in current example projects.
+  # In most cases this is a visible-only Excel export from Proteome Discoverer.
+  provider_export: "fill_in_relative_or_absolute_path"
+  # Leave cleaned_export empty unless a project-specific cleaned file replaces the provider export.
+  cleaned_export: "fill_in_if_used"
+  # Optional source used to help build sample_metadata.csv, for example old metadata.txt or metadata.xlsx.
+  metadata_source: "fill_in_if_used"
+  sample_metadata_csv: "workflow/00_raw_data/config/sample_metadata.csv"
+  comparisons_csv: "workflow/00_raw_data/config/comparisons.csv"
+
+analysis:
+  # These fields are usually stable across current projects unless the provider export format changes.
+  notebook_name: "proteomics_analysis.ipynb"
+  data_mode: "fill_in_grouped_or_other"
+  provider_type: "fill_in_provider_type"
+  input_format: "xlsx"
+  input_index_column: 4
+  psm_column_contains: "PSM"
+  abundance_column_contains: "Abundances (Grouped):"
+  column_rename_regexes:
+    - "Abundances_\\(Grouped\\):_"
+    - "_Female"
+  # grouping_column is the default only. comparisons.csv can override it per comparison.
+  grouping_column: "group"
+  # These fields are project-tunable and should be checked for each run.
+  psm_threshold: 3
+  remove_zero_only_rows: true
+  normalization_primary: "fill_in_primary_normalization"
+  normalization_secondary: "optional"
+  statistic: "student_t_test"
+  multiple_testing: "fdr_bh"
+  apply_uq_per_comparison: true
+
+outputs:
+  # Keep these paths unchanged unless the template structure itself is being updated.
+  qc_dir: "workflow/01_qc_normalization"
+  results_dir: "workflow/02_statistics"
+  plots_dir: "workflow/03_visualization"
+  secondary_dir: "workflow/04_secondary_analyses"
+  final_report_dir: "workflow/final_report"
+  scripts_dir: "workflow/scripts"
+
+flags:
+  # Boolean execution switches.
+  # Set astral_mode to true when zeros in the comparison matrix should be treated as missing-value placeholders
+  # during the t-test filtering step rather than as observed zero abundance. Use the mode that matches the legacy
+  # project workflow when reproducing an existing analysis.
+  astral_mode: false
+  use_prtc: true
+  generate_qvalue_plots: true
