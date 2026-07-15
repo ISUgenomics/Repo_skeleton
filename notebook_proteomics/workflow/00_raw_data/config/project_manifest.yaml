@@ -1,63 +1,37 @@
-# Edit this file in place.
-# Fill project-specific values before execution.
-# Paths are expected to be relative to the copied notebook_proteomics project root.
+# Edit this file in place before running the notebook.
+# Keep paths relative to the copied notebook_proteomics project root.
+# Keep it short: only include fields needed to start and control the analysis.
 
 project:
-  # Stable identifiers and context for this project.
-  project_id: "fill_in_project_id"
-  project_title: "fill_in_project_title"
-  organism: "fill_in_organism"
-  material: "fill_in_material"
-  analysis_owner: "fill_in_analysis_owner"
+  project_id: "fill_in_project_id"  # Stable short ID; usually the project code or folder name.
+  project_title: "fill_in_project_title"  # Human-readable study title used in reports and docs.
+  organism: "fill_in_organism"  # Species or biological system, for example "Bos taurus".
+  material: "fill_in_material"  # Tissue, fluid, or sample type, for example "liver proteomics".
+  analysis_owner: "fill_in_analysis_owner"  # Person or workflow label responsible for this run.
 
 inputs:
-  # provider_export is the main analysis input in current example projects.
-  # In most cases this is a visible-only Excel export from Proteome Discoverer.
-  provider_export: "fill_in_relative_or_absolute_path"
-  # Leave cleaned_export empty unless a project-specific cleaned file replaces the provider export.
-  cleaned_export: "fill_in_if_used"
-  # Optional source used to help build sample_metadata.csv, for example old metadata.txt or metadata.xlsx.
-  metadata_source: "fill_in_if_used"
-  sample_metadata_csv: "workflow/00_raw_data/config/sample_metadata.csv"
-  comparisons_csv: "workflow/00_raw_data/config/comparisons.csv"
+  raw_data_file: "workflow/00_raw_data/fill_in_raw_data_file.xlsx"  # Main raw data file used to start the analysis.
+  metadata_source: ""  # Optional legacy metadata/reference file; leave empty if none.
+  sample_metadata_csv: "workflow/00_raw_data/config/sample_metadata.csv"  # Sample annotations used for grouping and inclusion.
+  comparisons_csv: "workflow/00_raw_data/config/comparisons.csv"  # Comparison definitions and cutoffs.
+  comparisons_mode: "generated"  # Use generated to let the workflow create/update comparisons from sample_metadata.csv, or manual to preserve a hand-curated comparisons.csv.
 
 analysis:
-  # These fields are usually stable across current projects unless the provider export format changes.
-  notebook_name: "proteomics_analysis.ipynb"
-  data_mode: "fill_in_grouped_or_other"
-  provider_type: "fill_in_provider_type"
-  input_format: "xlsx"
-  input_index_column: 4
-  psm_column_contains: "PSM"
-  abundance_column_contains: "Abundances (Grouped):"
-  column_rename_regexes:
-    - "Abundances_\\(Grouped\\):_"
-    - "_Female"
-  # grouping_column is the default only. comparisons.csv can override it per comparison.
-  grouping_column: "group"
-  # These fields are project-tunable and should be checked for each run.
-  psm_threshold: 3
-  remove_zero_only_rows: true
-  normalization_primary: "fill_in_primary_normalization"
-  normalization_secondary: "optional"
-  statistic: "student_t_test"
-  multiple_testing: "fdr_bh"
-  apply_uq_per_comparison: true
-
-outputs:
-  # Keep these paths unchanged unless the template structure itself is being updated.
-  qc_dir: "workflow/01_qc_normalization"
-  results_dir: "workflow/02_statistics"
-  plots_dir: "workflow/03_visualization"
-  secondary_dir: "workflow/04_secondary_analyses"
-  final_report_dir: "workflow/final_report"
-  scripts_dir: "workflow/scripts"
-
-flags:
-  # Boolean execution switches.
-  # Set astral_mode to true when zeros in the comparison matrix should be treated as missing-value placeholders
-  # during the t-test filtering step rather than as observed zero abundance. Use the mode that matches the legacy
-  # project workflow when reproducing an existing analysis.
-  astral_mode: false
-  use_prtc: true
-  generate_qvalue_plots: true
+  input_format: "xlsx"  # Must match the raw data file type: xlsx, xls, csv, txt, or tsv.
+  input_index_column: 4  # Zero-based index of the protein/accession identifier column in the source file.
+  psm_threshold: 3  # Minimum PSM count required to keep a protein row.
+  psm_column_contains: "PSM"  # Substring used to locate the PSM/count column in the export.
+  abundance_column_contains: "Abundances (Grouped):"  # Substring used to locate abundance/sample columns.
+  column_rename_regexes:  # Regexes removed from abundance column names before matching sample metadata.
+    - "Abundances_\\(Grouped\\):_"  # Common Proteome Discoverer grouped-abundance prefix.
+    - "_Female"  # Example suffix to strip; replace or remove to match your sample names.
+  grouping_column: "group"  # Default sample_metadata.csv column used when comparisons.csv does not override grouping_column.
+  normalization_primary: "fill_in_primary_normalization"  # Required; common values are PRTC, control_run_quartile, or none.
+  normalization_secondary: "optional"  # Optional secondary normalization label or note for reporting.
+  apply_uq_per_comparison: true  # Apply upper-quartile normalization within each comparison before statistics.
+  astral_mode: true  # Default true for the common grouped-abundance exports used in this workflow; verify with infer_astral_mode.py when unsure.
+  between_group_bias_mode: "none"  # Usually leave as none; change only for a validated legacy bias-handling mode.
+  run_block_size: 11  # Samples per run block for control_run_quartile normalization.
+  control_column_contains: "Control_Control_Control"  # Substring that identifies the control channel for control_run_quartile.
+  post_normalization_column_merges: []  # Optional technical-replicate merges after normalization; leave [] if not needed.
+  generate_qvalue_plots: true  # Also create q-value-based plots when q-values are available.
