@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
 import argparse
+import copy
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from itertools import combinations
 import plotly.express as px
+import plotly.graph_objects as go
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedKFold
@@ -20,6 +22,72 @@ def safe_write_image(fig, path):
         fig.write_image(path)
     except Exception as exc:
         print(f"Warning: static export skipped for {path}: {exc}")
+
+
+def safe_write_static_bundle(fig, file_name, output_dirs=None):
+    if output_dirs:
+        png_path = Path(output_dirs['png']) / f"{file_name}.png"
+        svg_path = Path(output_dirs['svg']) / f"{file_name}.svg"
+    else:
+        png_path = Path(f"{file_name}.png")
+        svg_path = Path(f"{file_name}.svg")
+    safe_write_image(fig, png_path)
+    safe_write_image(fig, svg_path)
+
+
+def build_static_labeled_figure(fig, labeled_points, x_col, y_col):
+    static_fig = go.Figure(copy.deepcopy(fig))
+    if labeled_points.empty:
+        return static_fig
+
+    for sample_id, row in labeled_points.iterrows():
+        static_fig.add_annotation(
+            x=row[x_col],
+            y=row[y_col],
+            text=str(sample_id),
+            showarrow=False,
+            xanchor='left',
+            yanchor='bottom',
+            xshift=8,
+            font=dict(size=11, color='black'),
+            bgcolor='rgba(255,255,255,0.75)',
+            bordercolor='rgba(0,0,0,0.2)',
+            borderpad=2,
+        )
+    return static_fig
+
+
+def select_pca_static_labels(pc_df, x_pc, y_pc, top_fraction=0.15, min_global_labels=2, outlier_std_multiplier=1.0):
+    plot_df = pc_df[[x_pc, y_pc, 'Group']].copy()
+    plot_df['origin_distance'] = np.sqrt(plot_df[x_pc] ** 2 + plot_df[y_pc] ** 2)
+    top_n = min(len(plot_df), max(min_global_labels, int(np.ceil(len(plot_df) * top_fraction))))
+    farthest_samples = set(plot_df.nlargest(top_n, 'origin_distance').index.astype(str))
+
+    group_outliers = set()
+    for _, grp_df in plot_df.groupby('Group'):
+        if grp_df.empty:
+            continue
+        centroid_x = grp_df[x_pc].mean()
+        centroid_y = grp_df[y_pc].mean()
+        distances = np.sqrt((grp_df[x_pc] - centroid_x) ** 2 + (grp_df[y_pc] - centroid_y) ** 2)
+        threshold = distances.mean() + outlier_std_multiplier * distances.std(ddof=0)
+        if np.isnan(threshold):
+            continue
+        outlier_ids = grp_df.index[distances >= threshold].astype(str)
+        group_outliers.update(outlier_ids.tolist())
+
+    selected_ids = [sample_id for sample_id in plot_df.index.astype(str) if sample_id in farthest_samples and sample_id in group_outliers]
+    selected_points = plot_df.loc[plot_df.index.astype(str).isin(selected_ids), [x_pc, y_pc]].copy()
+    selected_points.index = selected_points.index.map(str)
+    return selected_points
+
+
+def select_plsda_static_labels(score_df, confidence_threshold=0.6):
+    is_low_confidence = score_df['CV_Score'] <= confidence_threshold
+    is_misclassified = score_df['CV_Prediction'] != score_df['Group']
+    selected_points = score_df.loc[is_low_confidence | is_misclassified, ['LV1', 'LV2']].copy()
+    selected_points.index = selected_points.index.map(str)
+    return selected_points
 
 
 def compute_pca(df, comparison=('Obese_DMBA', 'Slim_DMBA'), samples_group1=['a','b','c','d'], samples_group2=['e','f','g','h'], n_components=3, scale_data=True):
@@ -42,6 +110,7 @@ def compute_pca(df, comparison=('Obese_DMBA', 'Slim_DMBA'), samples_group1=['a',
     group1, group2 = comparison
     sample_cols = samples_group1 + samples_group2
     df_subset = df[sample_cols].copy()
+    df_subset.index = df_subset.index.map(str)
     
     # Handle zero/negative values (if needed) and log transform
     # Check for non-positive values if a log transform is needed
@@ -113,12 +182,12 @@ def plot_all_2d_pca_pairs(pc_df, comparison=('Obese_DMBA', 'Slim_DMBA'), explain
         file_name = f"PCA_{group1}_vs_{group2}_{x_pc}_vs_{y_pc}"
         if output_dirs:
             html_path = Path(output_dirs['html']) / f"{file_name}.html"
-            png_path = Path(output_dirs['png']) / f"{file_name}.png"
         else:
             html_path = Path(f"{file_name}.html")
-            png_path = Path(f"{file_name}.png")
         fig.write_html(html_path, config={'toImageButtonOptions': {'format': 'svg'}})
-        safe_write_image(fig, png_path)
+        labeled_points = select_pca_static_labels(pc_df, x_pc=x_pc, y_pc=y_pc)
+        static_fig = build_static_labeled_figure(fig, labeled_points, x_col=x_pc, y_col=y_pc)
+        safe_write_static_bundle(static_fig, file_name, output_dirs=output_dirs)
 
 
 def plot_pca_3d(pc_df, comparison=('group1', 'group2'), explained_var=None, output_dirs=None):
@@ -196,6 +265,7 @@ def plot_pls_da_with_cv(df,
 
     # Subset the dataframe for the samples of interest
     df_subset = df[sample_cols].copy()
+    df_subset.index = df_subset.index.map(str)
 
     # Handle zero or negative values if log transform is needed
     if (df_subset <= 0).any().any():
@@ -343,12 +413,12 @@ def plot_pls_da_with_cv(df,
     file_name = f"PLS-DA_CV_Ellipses_{group1}_vs_{group2}"
     if output_dirs:
         html_path = Path(output_dirs['html']) / f"{file_name}.html"
-        png_path = Path(output_dirs['png']) / f"{file_name}.png"
     else:
         html_path = Path(f"{file_name}.html")
-        png_path = Path(f"{file_name}.png")
     fig.write_html(html_path)
-    safe_write_image(fig, png_path)
+    labeled_points = select_plsda_static_labels(score_df)
+    static_fig = build_static_labeled_figure(fig, labeled_points, x_col='LV1', y_col='LV2')
+    safe_write_static_bundle(static_fig, file_name, output_dirs=output_dirs)
 
 
 def main():

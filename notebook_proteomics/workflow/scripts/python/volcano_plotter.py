@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import plotly.io as pio
 
 from helpers import configure_plotly_browser_env
@@ -15,6 +16,54 @@ def safe_write_image(fig, path):
         pio.write_image(fig, path)
     except Exception as exc:
         print(f"Warning: static export skipped for {path}: {exc}")
+
+
+def infer_static_label(row):
+    for column in ["Gene Symbol", "GeneSymbol", "Feature", "Accession", "Description"]:
+        if column in row.index:
+            value = row[column]
+            if pd.notna(value) and str(value).strip() and str(value).strip().lower() != "nan":
+                return str(value).strip()
+    return ""
+
+
+def _text_positions(count):
+    positions = ["top center", "bottom center", "middle left", "middle right"]
+    return [positions[i % len(positions)] for i in range(count)]
+
+
+def build_static_labeled_volcano(fig, df, x_col, y_col):
+    static_fig = go.Figure(fig)
+    labeled = df[df["Category"].isin(["Significant Positive", "Significant Negative"])].copy()
+    if labeled.empty:
+        return static_fig
+
+    labeled["StaticLabel"] = labeled.apply(infer_static_label, axis=1)
+    labeled = labeled[labeled["StaticLabel"].astype(str).str.strip() != ""]
+    if labeled.empty:
+        return static_fig
+
+    for category, text_color in [
+        ("Significant Positive", "darkred"),
+        ("Significant Negative", "darkblue"),
+    ]:
+        subset = labeled[labeled["Category"] == category]
+        if subset.empty:
+            continue
+        static_fig.add_trace(
+            go.Scatter(
+                x=subset[x_col],
+                y=subset[y_col],
+                mode="text",
+                text=subset["StaticLabel"],
+                textposition=_text_positions(len(subset)),
+                textfont={"size": 10, "color": text_color},
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+
+    return static_fig
 
 
 # Volcano Plot function
@@ -93,8 +142,9 @@ def plot_volcano(df, columns=None, pvalue_limit=0.05, fold_change_limit=1, hover
         png_path = Path(f"{outFileName}{suffix}.png")
 
     fig.write_html(html_path)
-    safe_write_image(fig, svg_path)
-    safe_write_image(fig, png_path)
+    static_fig = build_static_labeled_volcano(fig, df, l2fc_col, ydata)
+    safe_write_image(static_fig, svg_path)
+    safe_write_image(static_fig, png_path)
 
     fig.show()
 

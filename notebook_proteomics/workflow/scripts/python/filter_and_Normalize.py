@@ -11,7 +11,15 @@ from pathlib import Path
 
 import yaml
 
-from helpers import extractAnnotation, renameColumns, parse_bool
+from helpers import extractAnnotation, renameColumns, parse_bool, prepare_manifest
+
+
+def coerce_numeric_frame(df):
+    """
+    Coerce all columns to numeric values while preserving the index.
+    Non-numeric cells become NaN and can be handled downstream.
+    """
+    return df.apply(lambda col: pd.to_numeric(col, errors='coerce'))
 
 
 ## Filter
@@ -28,9 +36,14 @@ def filterLowPSM(df, psm_value=3, controlColumnContains='PSM'):
         sys.exit(1)
     psm_col = psm_col[0]  # Assumes first matching column name is correct
 
+    # Provider exports sometimes store PSM counts as strings in Excel-derived tables.
+    # Coerce to numeric before thresholding so metadata/config helpers can validate
+    # the raw file without failing on mixed text/integer comparisons.
+    psm_numeric = pd.to_numeric(df[psm_col], errors='coerce')
+
     # Filter for # PSMs > psm_value, remove all rows that contain PRTC, 
     # PRTC columns shouldn't exist in column 11 type data.
-    filtered_data = df[(df[psm_col] > psm_value) | df.index.str.contains("PRTC")]
+    filtered_data = df[(psm_numeric > psm_value) | df.index.astype(str).str.contains("PRTC")]
     print("The size of the data before and after filtering are usually different.")
     # data size after filtering
     df_after = filtered_data.shape
@@ -45,8 +58,8 @@ def extractAbundanceData(df, abundanceColumnContains='Abundances (Grouped):'):
     # Identify columns to keep: Accession number and abundances
     columns_to_keep = [col for col in df.columns if abundanceColumnContains in col]
 
-    # Select specified columns and replace missing values with zeros
-    df = df[columns_to_keep].fillna(0)
+    # Select abundance columns, coerce to numeric, then replace missing values with zeros
+    df = coerce_numeric_frame(df[columns_to_keep]).fillna(0)
 
     ## Filter for 0 abundance across all samples
 
@@ -83,7 +96,7 @@ def perform_prtc_pca(normalized_data_sorted, PRTC_rows, n_components=3, perform_
 
     # Step 1: Extract PRTC Proteins
     try:
-        prtc_data = normalized_data_sorted.loc[PRTC_rows].copy()
+        prtc_data = coerce_numeric_frame(normalized_data_sorted.loc[PRTC_rows].copy())
         print(f"Extracted {prtc_data.shape[0]} PRTC proteins.")
     except KeyError as e:
         raise KeyError(f"One or more PRTC_rows not found in the DataFrame: {e}")
@@ -196,8 +209,8 @@ def perform_prtc_pca(normalized_data_sorted, PRTC_rows, n_components=3, perform_
 
 def normalize_prtc(df):
     # Grab all PRTC rows
-    filtered_data_raw=df.copy()
-    abundPRTC = df.loc[df.index.str.startswith("PRTC-")]
+    filtered_data_raw = coerce_numeric_frame(df.copy())
+    abundPRTC = filtered_data_raw.loc[filtered_data_raw.index.astype(str).str.startswith("PRTC-")]
     # replace the zero values with NAN so it isn't included in the mean calculation 
     abundPRTC = abundPRTC.replace(0, np.nan)
 
@@ -207,9 +220,58 @@ def normalize_prtc(df):
     medianPRTCvalues=abundPRTC.median(axis=0) # calculate the column means
 
     # Here we are dividing each column in df dataframe by its corresponding medianPRTC value then multiplying by the mean of PRTC medians to bring the abundance back to a reasonable number 
-    filtered_data_normalized=df.divide(medianPRTCvalues)*medianPRTCvalues.mean() 
+    filtered_data_normalized = filtered_data_raw.divide(medianPRTCvalues) * medianPRTCvalues.mean()
     print("median:",medianPRTCvalues.median(),"mean:",medianPRTCvalues.mean())  
     return filtered_data_raw, filtered_data_normalized
+
+
+def normalize_control_run_quartile(df, run_block_size=11, control_column_contains='Control_Control_Control'):
+    """
+    Legacy normalization used in older Severin workflows.
+
+    For each run block, divide all columns by that run's control column and rescale
+    each run to the first run using the control-column 75th percentile. Control columns
+    are removed from the normalized output.
+    """
+    df = coerce_numeric_frame(df.copy())
+    col_num = df.shape[1]
+    data_collection_runs = int(col_num / run_block_size)
+    if col_num % run_block_size != 0:
+        raise ValueError(
+            f"Total number of samples ({col_num}) is not divisible by run_block_size ({run_block_size})."
+        )
+
+    control_column_names = [col for col in df.columns if control_column_contains in str(col)]
+    if len(control_column_names) != data_collection_runs:
+        raise ValueError(
+            f"Expected {data_collection_runs} control columns containing {control_column_contains!r}, "
+            f"found {len(control_column_names)}."
+        )
+
+    print("Number of Samples:", col_num, "Number of Runs:", data_collection_runs)
+    filtered_data_raw = df.copy()
+    normalized = df.copy()
+
+    start_index = 0
+    end_index = run_block_size
+    for i in range(data_collection_runs):
+        current_run_slice = normalized.iloc[:, start_index:end_index]
+        control_column = normalized[control_column_names[i]]
+        division_result = current_run_slice.div(control_column, axis=0)
+
+        factor_run_i = filtered_data_raw[control_column_names[i]].describe()["75%"]
+        factor_run_0 = filtered_data_raw[control_column_names[0]].describe()["75%"]
+        run_factor = factor_run_0 / factor_run_i
+        control_quartile_75 = normalized.describe()[control_column_names[i]]["75%"] * run_factor
+        quartile_result = division_result * control_quartile_75
+        normalized.iloc[:, start_index:end_index] = quartile_result
+
+        start_index += run_block_size
+        end_index += run_block_size
+
+    normalized = normalized.fillna(0)
+    normalized = normalized.drop(control_column_names, axis=1)
+    return filtered_data_raw, normalized
 
 
 def uq_normalization(data):
@@ -237,6 +299,86 @@ def uq_normalization(data):
     normalized_data *= global_uq
 
     return raw_data, normalized_data
+
+
+def read_provider_export(data_path, input_format='xlsx', index_col=4):
+    input_format = str(input_format).lower()
+    if input_format in {'xlsx', 'xls'}:
+        return pd.read_excel(data_path, index_col=index_col)
+    if input_format == 'csv':
+        return pd.read_csv(data_path, index_col=index_col)
+    if input_format in {'txt', 'tsv'}:
+        return pd.read_csv(data_path, sep='\t', index_col=index_col)
+    raise ValueError(f'Unsupported input_format: {input_format}')
+
+
+def apply_column_merge_operations(df, merge_operations):
+    """
+    Add merged columns based on non-zero means and optionally drop source columns.
+    """
+    result = df.copy()
+    applied = []
+    for operation in merge_operations or []:
+        output_column = operation.get('output_column')
+        input_columns = operation.get('input_columns', [])
+        method = str(operation.get('method', 'nonzero_mean')).lower()
+        drop_inputs = parse_bool(operation.get('drop_inputs', True))
+
+        if not output_column or not input_columns:
+            raise ValueError(f'Each merge operation requires output_column and input_columns: {operation}')
+
+        missing = sorted(set(input_columns) - set(result.columns))
+        if missing:
+            raise KeyError(f'Merge operation for {output_column} references missing columns: {missing}')
+
+        if method != 'nonzero_mean':
+            raise ValueError(f'Unsupported merge method: {method}')
+
+        result[output_column] = result[input_columns].replace(0, np.nan).mean(axis=1).fillna(0)
+        if drop_inputs:
+            result = result.drop(columns=input_columns)
+        applied.append(
+            {
+                'output_column': output_column,
+                'input_columns': '|'.join(input_columns),
+                'method': method,
+                'drop_inputs': drop_inputs,
+            }
+        )
+    return result, pd.DataFrame(applied)
+
+
+def perform_primary_normalization(abundance_data, analysis_cfg, flags_cfg):
+    abundance_data = coerce_numeric_frame(abundance_data.copy())
+    normalization_primary = str(analysis_cfg.get('normalization_primary', '')).strip().lower()
+    use_prtc = parse_bool(flags_cfg.get('use_prtc', True))
+    prtc_mask = abundance_data.index.astype(str).str.startswith('PRTC-')
+
+    if normalization_primary in {'prtc', 'prtc_median'}:
+        if not prtc_mask.any():
+            raise ValueError('PRTC normalization requested but no PRTC rows were detected.')
+        return normalize_prtc(abundance_data), {'normalization_primary': normalization_primary}
+
+    if normalization_primary in {'control_run_quartile', 'legacy_control_run_quartile'}:
+        run_block_size = int(analysis_cfg.get('run_block_size', 11))
+        control_column_contains = analysis_cfg.get('control_column_contains', 'Control_Control_Control')
+        return normalize_control_run_quartile(
+            abundance_data,
+            run_block_size=run_block_size,
+            control_column_contains=control_column_contains,
+        ), {
+            'normalization_primary': normalization_primary,
+            'run_block_size': run_block_size,
+            'control_column_contains': control_column_contains,
+        }
+
+    if normalization_primary in {'none', 'identity', ''}:
+        return (abundance_data.copy(), abundance_data.copy()), {'normalization_primary': 'none'}
+
+    if use_prtc and prtc_mask.any():
+        return normalize_prtc(abundance_data), {'normalization_primary': 'prtc_fallback'}
+
+    raise ValueError(f'Unsupported normalization_primary: {analysis_cfg.get("normalization_primary")}')
 
 
 def plot_data_distribution(raw_data, normalized_data):
@@ -281,17 +423,10 @@ def run_qc_and_normalization(manifest_path):
     with open(manifest_path, 'r', encoding='utf-8') as handle:
         manifest = yaml.safe_load(handle)
 
-    input_cfg = manifest['inputs']
-    analysis_cfg = manifest['analysis']
-    output_cfg = manifest['outputs']
-    flags_cfg = manifest['flags']
+    _, input_cfg, analysis_cfg, output_cfg, flags_cfg = prepare_manifest(manifest)
 
     provider_export = project_root / input_cfg['provider_export']
-    cleaned_export = input_cfg.get('cleaned_export')
-    if cleaned_export and str(cleaned_export).strip():
-        data_path = project_root / cleaned_export
-    else:
-        data_path = provider_export
+    data_path = provider_export
 
     sample_metadata_path = project_root / input_cfg['sample_metadata_csv']
     qc_dir = project_root / output_cfg['qc_dir']
@@ -303,12 +438,7 @@ def run_qc_and_normalization(manifest_path):
 
     input_format = str(analysis_cfg.get('input_format', 'xlsx')).lower()
     index_col = analysis_cfg.get('input_index_column', 4)
-    if input_format in {'xlsx', 'xls'}:
-        data = pd.read_excel(data_path, index_col=index_col)
-    elif input_format == 'csv':
-        data = pd.read_csv(data_path, index_col=index_col)
-    else:
-        raise ValueError(f'Unsupported input_format: {input_format}')
+    data = read_provider_export(data_path, input_format=input_format, index_col=index_col)
 
     annotation = extractAnnotation(data)
     filtered_psm = filterLowPSM(
@@ -325,23 +455,24 @@ def run_qc_and_normalization(manifest_path):
         regexes=analysis_cfg.get('column_rename_regexes', [r'Abundances_\(Grouped\):_', r'_Female']),
     )
 
+    (raw_data, normalized_data), normalization_info = perform_primary_normalization(
+        abundance_data, analysis_cfg, flags_cfg
+    )
+
+    merge_operations = analysis_cfg.get('post_normalization_column_merges', [])
+    merge_log = pd.DataFrame()
+    if merge_operations:
+        normalized_data, merge_log = apply_column_merge_operations(normalized_data, merge_operations)
+
     include_series = sample_metadata['include'].apply(parse_bool)
     metadata_used = sample_metadata.loc[include_series].copy()
-    missing_columns = sorted(set(metadata_used['source_column']) - set(abundance_data.columns))
+    missing_columns = sorted(set(metadata_used['source_column']) - set(normalized_data.columns))
     if missing_columns:
-        raise KeyError(f'Source columns listed in sample_metadata.csv were not found after column renaming: {missing_columns}')
+        raise KeyError(f'Source columns listed in sample_metadata.csv were not found after normalization/column merging: {missing_columns}')
 
-    abundance_data = abundance_data[metadata_used['source_column'].tolist()].copy()
+    normalized_data = normalized_data[metadata_used['source_column'].tolist()].copy()
     metadata_used['column_name'] = metadata_used['source_column']
     metadata_used['treatment'] = metadata_used[analysis_cfg.get('grouping_column', 'group')]
-
-    use_prtc = parse_bool(flags_cfg.get('use_prtc', True))
-    prtc_mask = abundance_data.index.astype(str).str.startswith('PRTC-')
-    if use_prtc and prtc_mask.any():
-        raw_data, normalized_data = normalize_prtc(abundance_data)
-    else:
-        raw_data = abundance_data.copy()
-        normalized_data = abundance_data.copy()
 
     metadata_used.to_csv(qc_dir / 'sample_metadata_used.csv', index=False)
     metadata_used.to_csv(qc_dir / 'metadata.txt', index=False)
@@ -349,6 +480,9 @@ def run_qc_and_normalization(manifest_path):
     annotation.to_csv(qc_dir / 'annotation.csv', index=True)
     raw_data.to_csv(qc_dir / 'raw_abundance_matrix.csv', index=True)
     normalized_data.to_csv(qc_dir / 'normalized_abundance_matrix.csv', index=True)
+    pd.DataFrame([normalization_info]).to_csv(qc_dir / 'normalization_summary.csv', index=False)
+    if not merge_log.empty:
+        merge_log.to_csv(qc_dir / 'post_normalization_column_merges.csv', index=False)
 
     return {
         'qc_dir': str(qc_dir),
