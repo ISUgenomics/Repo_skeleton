@@ -4,7 +4,7 @@ Editor notes:
 -->
 # config
 
-Project input files stored in `config/`.
+Project startup files stored in `config/`.
 
 ## Contents
 
@@ -14,26 +14,27 @@ Project input files stored in `config/`.
 
 ## Purpose
 
-- `project_manifest.yaml`: project-level paths, analysis settings, and output locations referenced across the workflow
-- `sample_metadata.csv`: sample annotations and grouping fields used in [01_qc_normalization](../../01_qc_normalization/README.md), [02_statistics](../../02_statistics/README.md), and [03_visualization](../../03_visualization/README.md)
-- `comparisons.csv`: comparison definitions and thresholds used for [02_statistics](../../02_statistics/README.md) and [03_visualization](../../03_visualization/README.md)
+- `project_manifest.yaml`: minimal starting settings used to open the raw data file and control the analysis
+- `sample_metadata.csv`: sample annotations and grouping fields created by the notebook if missing, or created up front from an external metadata source file with `metadata_gen.py`, then reviewed and reused across the workflow
+- `comparisons.csv`: comparison definitions used for [02_statistics](../../02_statistics/README.md) and [03_visualization](../../03_visualization/README.md); may be created by the notebook if missing
 
 ## Key columns
 
-`sample_metadata.csv`
+[sample_metadata.csv](./sample_metadata.csv)
 
 | Column | Meaning |
 |------|---------|
 | `sample_id` | stable sample identifier used in project notes |
 | `source_column` | exact column name expected after abundance-column renaming |
-| `treatment` | treatment-level grouping used in comparisons when applicable |
+| `treatment` | primary treatment-level grouping used in comparisons when applicable |
+| additional factor columns | optional second or later experimental dimensions created from repeated `--factor name=column` inputs |
 | `group` | broader grouping used in comparisons when applicable |
 | `replicate` | replicate number within the chosen grouping |
 | `batch_or_run` | file, run, or batch label if useful |
 | `include` | `TRUE` or `FALSE` to include the sample in analysis |
 | `notes` | optional project-specific comment |
 
-`comparisons.csv`
+[comparisons.csv](./comparisons.csv)
 
 | Column | Meaning |
 |------|---------|
@@ -48,6 +49,11 @@ Project input files stored in `config/`.
 | `enabled` | `TRUE` or `FALSE` to run the comparison |
 | `notes` | optional comment for project-specific handling |
 
-## Important execution flag
+## Important startup settings
 
-- `project_manifest.yaml -> flags.astral_mode`: controls whether zeros in comparison subsets are treated as missing-value placeholders during the t-test filtering step. Keep this aligned with the original project workflow when reproducing an existing analysis.
+- `project_manifest.yaml -> inputs.raw_data_file`: main raw Excel or text file used to start the analysis
+- `project_manifest.yaml -> inputs.metadata_source`: optional metadata workbook/table used by `metadata_gen.py` before notebook launch
+- `project_manifest.yaml -> inputs.comparisons_mode`: set to `generated` to let the workflow create/update `comparisons.csv` from `sample_metadata.csv`, or `manual` to preserve a hand-edited comparisons file
+- `project_manifest.yaml -> analysis.normalization_primary`: main normalization path. Common values are `PRTC`, `control_run_quartile`, or `none`
+- `project_manifest.yaml -> analysis.astral_mode`: controls whether zeros in comparison subsets are treated as missing-value placeholders during the t-test filtering step
+- `project_manifest.yaml -> analysis.post_normalization_column_merges`: optional technical-replicate merge rules applied after primary normalization and before statistics
