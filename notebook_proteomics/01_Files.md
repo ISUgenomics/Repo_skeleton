@@ -1,52 +1,46 @@
-#### 01_Files.md
+# 01_Files
 
-<!--
-Editor notes:
-- This file should list actual project files, not examples from older projects.
-- If a row is not used, delete it.
-- If the provider file was edited before analysis, record both original and cleaned versions.
--->
+This file inventories the main project inputs, configuration files, and output locations used in the workflow.
 
-[Raw and Source Files](#raw-and-source-files)
-[Metadata Files](#metadata-files)
-[Processed Outputs](#processed-outputs)
-[Notebook and Script Outputs](#notebook-and-script-outputs)
+- [Raw Data](#raw-data)
+- [Workflow Configuration](#workflow-configuration)
+- [Output Layout](#output-layout)
 
----
+## Raw Data
 
-- **Date created:** [YYYY-MM-DD]
-- **Last updated:** [YYYY-MM-DD]
-- **Primary analysis location:** `[REQUIRED]`
+| File | Role | Notes |
+|---|---|---|
+| [{{ raw_data_file }}](./workflow/00_raw_data/) | main raw data file | `{{ raw_data_notes }}` |
+| [{{ metadata_source_file }}](./workflow/00_raw_data/) | metadata source | `{{ metadata_source_notes }}` |
 
-## Raw and Source Files
+## Workflow Configuration
 
-| File role | File name | Format | Source | Location | Notes |
-|-----------|-----------|--------|--------|----------|-------|
-| Provider export | `[REQUIRED]` | `.xlsx/.txt/.tsv` | `[REQUIRED]` | `[REQUIRED]` | main source used for analysis |
-| Visible-only export | `[REQUIRED if used]` | `.xlsx/.csv/.tsv` | generated from provider export | `[REQUIRED]` | if hidden rows/cells were removed |
-| Original metadata file | `[REQUIRED if separate]` | `.xlsx/.csv/.tsv` | `[REQUIRED]` | `[REQUIRED]` | source metadata |
+| File | Role | Notes |
+|---|---|---|
+| [workflow/00_raw_data/config/project_manifest.yaml](./workflow/00_raw_data/config/project_manifest.yaml) | project manifest | run settings, file paths, and workflow options |
+| [workflow/00_raw_data/config/sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv) | sample metadata | finalized sample annotations used by the notebook |
+| [workflow/00_raw_data/config/comparisons.csv](./workflow/00_raw_data/config/comparisons.csv) | comparison table | finalized enabled-comparison analysis plan |
 
-## Metadata Files
+**Notes**
 
-| File | Purpose | Location |
-|------|---------|----------|
-| `sample_metadata.csv` | curated sample table used by scripts and notebook | `workflow/00_raw_data/config/` |
-| `comparisons.csv` | requested comparisons and thresholds | `workflow/00_raw_data/config/` |
-| `project_manifest.yaml` | project-level settings | `workflow/00_raw_data/config/` |
+- See [workflow/00_raw_data/README.md](./workflow/00_raw_data/README.md) for raw-data intake details.
+- visible-only raw-data copy: `{{ visible_only_copy_status }}`
 
-## Processed Outputs
+## Output Layout
 
-| File type | Description | Format | Filename(s) | Location |
-|-----------|-------------|--------|-------------|----------|
-| filtered matrix | PSM-filtered or cleaned abundance data | `.csv` | `[REQUIRED]` | `workflow/00_raw_data/` |
-| normalized matrix | post-normalization abundance data | `.csv` | `[REQUIRED]` | `workflow/01_qc_normalization/` |
-| comparison results | per-comparison stats tables | `.csv` | `[REQUIRED]` | `workflow/02_statistics/` |
-| plot files | volcano, heatmap, PCA, PLS-DA | `.png/.svg/.html` | `[REQUIRED]` | `workflow/03_visualization/` |
+- QC and normalization: [workflow/01_qc_normalization](./workflow/01_qc_normalization/)
+- Statistics tables: [workflow/02_statistics](./workflow/02_statistics/)
+- Figures and interactive plots: [workflow/03_visualization](./workflow/03_visualization/)
+- Scripts and helpers: [workflow/scripts](./workflow/scripts/)
 
-## Notebook and Script Outputs
-
-| File type | Description | Location |
-|-----------|-------------|----------|
-| notebook | main analysis notebook | `[REQUIRED]` |
-| markdown export | notebook rendered to markdown if generated | `[REQUIRED or remove]` |
-| helper scripts | reusable plotting/stats scripts | `workflow/scripts/` |
+| Key Output | File or folder |
+|---|---|
+| raw abundance matrix | [workflow/01_qc_normalization/raw_abundance_matrix.csv](./workflow/01_qc_normalization/raw_abundance_matrix.csv) |
+| normalized abundance matrix | [workflow/01_qc_normalization/normalized_abundance_matrix.csv](./workflow/01_qc_normalization/normalized_abundance_matrix.csv) |
+| normalization summary | [workflow/01_qc_normalization/normalization_summary.csv](./workflow/01_qc_normalization/normalization_summary.csv) |
+| annotation table | [workflow/01_qc_normalization/annotation.csv](./workflow/01_qc_normalization/annotation.csv) |
+| software versions | [workflow/01_qc_normalization/software_versions.txt](./workflow/01_qc_normalization/software_versions.txt) |
+| comparison tables | [workflow/02_statistics/CSV](./workflow/02_statistics/CSV) |
+| significant-hit summary | [workflow/02_statistics/significant_protein_counts.csv](./workflow/02_statistics/significant_protein_counts.csv) |
+| plots | [workflow/03_visualization/output](./workflow/03_visualization/output) |
+| main notebook | [workflow/scripts/notebooks/proteomics_analysis.ipynb](./workflow/scripts/notebooks/proteomics_analysis.ipynb) |

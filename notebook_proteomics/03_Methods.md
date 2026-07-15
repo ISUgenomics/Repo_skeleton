@@ -1,61 +1,73 @@
-#### 03_Methods.md
+# 03_Methods
 
-<!--
-Editor notes:
-- Remove options not used in the project.
-- Record exact versions, thresholds, and exceptions.
-- If the project deviates from the default workflow, explain why.
--->
+This file records the experimental context, computational workflow steps and project-specific settings, and manuscript-ready methods summary for the analysis.
 
-[Experimental Methods](#experimental-methods)
-[Computational Methods](#computational-methods)
-[Project-Specific Decisions](#project-specific-decisions)
-[Manuscript Methods Paragraph](#manuscript-methods-paragraph)
+- [Experimental Context](#experimental-context)
+- [Computational Workflow](#computational-workflow)
+  - [Analysis Steps](#analysis-steps)
+- [Software Versions](#software-versions)
+- [Manuscript-Style Summary](#manuscript-style-summary)
 
----
+## Experimental Context
 
-- **Date created:** [YYYY-MM-DD]
-- **Last updated:** [YYYY-MM-DD]
+Proteomic abundance data were obtained from `{{ tissue_or_material }}` collected from `{{ organism_or_system }}` and analyzed by `{{ platform }}`. The raw data file used for the workflow was [{{ raw_data_file }}](./workflow/00_raw_data/), which should contain the expected grouped abundance columns and protein metadata fields.
 
-## Experimental Methods
+## Computational Workflow
 
-| Step | Description |
-|------|-------------|
-| Organism / system | `[REQUIRED]` |
-| Material / tissue | `[REQUIRED]` |
-| Sample preparation | `[REQUIRED]` |
-| Instrument / platform | `[REQUIRED]` |
-| Search / identification software | `[REQUIRED]` |
-| Export type | `[REQUIRED]` |
+Protein abundance data were analyzed from the grouped-abundance raw-data file using the [notebook-based proteomics workflow](./workflow/scripts/notebooks/proteomics_analysis.ipynb) configured by [project_manifest.yaml](./workflow/00_raw_data/config/project_manifest.yaml), [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv), and [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv).
 
-## Computational Methods
+### Analysis Steps
 
-| check | step | tool / file | version | notes |
-|-------|------|-------------|---------|-------|
-| [x] | input inspection | provider export review | | |
-| [x] | PSM filtering | `filter_and_normalize.py` or notebook cell | | |
-| [x] | abundance cleanup | column extraction and rename rules | | |
-| [x] | normalization | `PRTC`, `upper quartile`, or other | | |
-| [x] | statistics | `scipy.stats.ttest_ind` or other | | |
-| [x] | multiple testing | `statsmodels` FDR | | |
-| [x] | visualization | volcano / heatmap / PCA / PLS-DA | | |
-| [ ] | secondary comparison set | optional | | |
-| [ ] | remake plots with altered thresholds | optional | | |
+1. Inspect the raw-data workbook or table and confirm that it is the correct starting input.
+2. Filter proteins using the configured PSM threshold while retaining PRTC rows for normalization when applicable.
+3. Extract and rename abundance columns to sample-level columns that match the metadata.
+4. Normalize sample abundances using the configured primary normalization method.
+5. Apply any configured comparison-level normalization before statistics.
+6. Run Student's t-test, Shapiro-Wilk normality testing, fold-change calculation, and Benjamini-Hochberg FDR correction for each enabled comparison.
+7. Generate CSV outputs, volcano plots, heatmaps, PCA plots, and PLS-DA plots.
 
-## Project-Specific Decisions
+**Project-specific notes**
 
-Document anything that is easy to leave hardcoded:
+- Proteins were retained for downstream analysis when peptide-spectrum match counts exceeded `{{ psm_threshold }}`, while PRTC rows were retained for normalization when applicable.
+- Abundance columns matching `{{ abundance_column_pattern }}` were extracted from the raw data, renamed to sample-level columns, and aligned to the validated metadata table.
+- The workflow was configured with `astral_mode: {{ astral_mode }}`, so zero values were treated as `{{ zero_handling_description }}`.
+- Primary normalization was performed using `{{ primary_normalization }}`, followed by `{{ secondary_normalization }}`.
+- Only the requested contrasts listed in [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv) were enabled.
 
-- rename rules used for provider columns
-- treatment mapping dictionary
-- group merge rules
-- handling of zeros
-- handling of technical replicates
-- handling of extra samples
-- Astral-specific or provider-specific branching
+**Main settings used in the run**
 
-## Manuscript Methods Paragraph
+| Setting | Value |
+|---|---|
+| input format | `{{ input_format }}` |
+| PSM threshold | `> {{ psm_threshold }}` |
+| abundance columns | `{{ abundance_column_pattern }}` |
+| primary normalization | `{{ primary_normalization }}` |
+| per-comparison upper quartile normalization | `{{ upper_quartile_normalization }}` |
+| `astral_mode` | `{{ astral_mode }}` |
+| q-value plots | `{{ qvalue_plots }}` |
 
-Proteomic abundance data were obtained from `[REQUIRED: provider / platform]` and exported as `[REQUIRED: file type]`. The analysis used a project-specific visible-only or cleaned export defined in `01_Files.md`. Proteins were filtered to retain entries with peptide-spectrum match counts above `[REQUIRED threshold]`, while quality-control entries such as `PRTC` were handled according to the normalization workflow. Features with zero abundance across all included samples were removed prior to downstream analysis.
+| p-value cutoff | q-value cutoff | abs(log2FC) cutoff |
+|---|---|---|
+| `0.05` | `0.05` | `1` |
 
-Sample-level abundances were normalized using `[REQUIRED: PRTC / upper quartile / other]`. For pairwise comparisons, the exact sample groupings and thresholds were defined in `comparisons.csv` and not hardcoded in the notebook. Differential abundance testing was performed using `[REQUIRED: Student's t-test / other]`, and p-values were adjusted using the Benjamini-Hochberg method. Results were summarized with volcano plots, heatmaps, principal component analysis, and partial least squares discriminant analysis where appropriate.
+### Software Versions
+
+The executed environment is recorded in [workflow/01_qc_normalization/software_versions.txt](./workflow/01_qc_normalization/software_versions.txt).
+
+| Package | Version |
+|---|---|
+| Python | `{{ python_version }}` |
+| numpy | `{{ numpy_version }}` |
+| pandas | `{{ pandas_version }}` |
+| scipy | `{{ scipy_version }}` |
+| statsmodels | `{{ statsmodels_version }}` |
+| plotly | `{{ plotly_version }}` |
+| matplotlib | `{{ matplotlib_version }}` |
+| seaborn | `{{ seaborn_version }}` |
+| sklearn | `{{ sklearn_version }}` |
+
+## Manuscript-Style Summary
+
+Proteomic abundance data were analyzed from a grouped-abundance LC-MS/MS raw-data matrix using a notebook-based workflow parameterized by sample-metadata and comparison-definition files. Proteins were filtered using a peptide-spectrum match threshold greater than `{{ psm_threshold }}`, with PRTC entries retained for normalization when applicable. Sample-abundance columns were extracted from the raw data, harmonized to the curated metadata table, and normalized using `{{ primary_normalization }}` primary normalization followed by `{{ secondary_normalization }}`. The workflow was executed with `astral_mode: {{ astral_mode }}`, such that zero values were treated as `{{ zero_handling_description }}`.
+
+Differential abundance analysis was performed separately for `{{ enabled_comparisons_summary }}`. For each contrast, Student's t-tests, Shapiro-Wilk normality tests, and fold-change calculations were applied to the normalized abundance matrix, and p-values were adjusted using the Benjamini-Hochberg false-discovery-rate procedure. Reporting thresholds were defined a priori as `p < 0.05`, `q < 0.05`, and `abs(log2FC) > 1`. Comparison-specific result tables were used to generate volcano plots, heatmaps, principal component analysis plots, and partial least squares discriminant analysis plots.

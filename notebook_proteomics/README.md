@@ -1,159 +1,76 @@
-<!-- Editor notes:
-- Keep rendered content concise and project-facing.
-- Use workflow/ as the live execution workspace and root numbered files as summary/manuscript-facing documents.
-- Fill config files and workflow records with project facts from the actual run.
+<!-- Editor guide
+Use this file as the short landing page for the copied project.
 
-Copy-paste status snippets:
-- ⬜ not started
-- ✅ done
-- [ ] markdown unchecked task
-- [x] markdown checked task
+- Replace unresolved variables with project-specific facts.
+- Keep this file shorter than [00_Background.md](./00_Background.md).
+- Keep biological rationale high-level here; detailed workflow facts belong in `workflow/`.
+- Use `✅` only after the project-specific run has been completed and validated.
 -->
+# {{ project_title }}
 
-# Proteomics Project
+{{ one_sentence_summary }}
 
-- [How to use this template](#how-to-use-this-template)
-- [Environment setup](#environment-setup)
-- [Required project-specific inputs](#required-project-specific-inputs)
-- [Project structure for proteomics analysis](#project-structure-for-proteomics-analysis)
-- [Documentation for manuscript writing](#documentation-for-manuscript-writing)
+This project analyzes proteomics data from `{{ organism_or_system }}` using `{{ sample_count }}` samples collected from `{{ tissue_or_material }}`. The study compares `{{ conditions_or_groups }}` to address `{{ main_biological_question }}`.
 
-The `notebook_proteomics/` template is a documentation-first scaffold for standardized proteomics analysis. It keeps the manuscript-supporting `.md` files at the project root and uses `workflow/` as the real execution workspace: live process notes, decision points, issues, intermediate outputs, and analysis results.
+Experimental design was:
 
-```bash
-notebook_proteomics/
-├── *.md              # see Documentation for manuscript writing
-└── workflow/         # see Project structure for proteomics analysis 
-```
+| **primary groups:** | **secondary groups:** |
+|---|---|
+| `{{ primary_group_1 }}` | `{{ secondary_group_1 }}` |
+| `{{ primary_group_2 }}` | `{{ secondary_group_2 }}` |
 
-## How to use this template
+*`{{ primary_group_labels_note }}`*
 
-1. Copy `notebook_proteomics/` into a new project repository.
-2. Create the analysis environment from `environment.yml` or `requirements.txt`.
-3. Start in `workflow/00_raw_data/`, place or document the provider export, and record any optional cleanup there.
-4. Fill `workflow/00_raw_data/config/project_manifest.yaml`, `sample_metadata.csv`, and `comparisons.csv`.  
-  If helpful, bootstrap config with:
-```bash
-python workflow/scripts/python/bootstrap_config.py \
-  --project-root . \
-  --input-file workflow/00_raw_data/<provider_export>.xlsx \
-  --legacy-metadata workflow/00_raw_data/<metadata.txt_or_xlsx>
-```
+## Biological Question
 
-5. Follow the numbered workflow steps and record commands, outputs, observations, and issues as the analysis progresses.
-6. Run `workflow/scripts/notebooks/proteomics_analysis.ipynb` only after the config files are final.
-7. Use `workflow/scripts/notebooks/Remake_Plots.ipynb` only for follow-up or alternate-threshold plotting when needed.
-8. Update root `.md` files as the project progresses.
+{{ biological_question }}
 
+## Hypotheses
 
-## Environment setup
+**Whether `{{ primary_hypothesis }}`.**
 
-Two environment files are provided at the project root:
+*The proteomic evidence that would support or contextualize that biological effect, include:*
+- Whether `{{ secondary_hypothesis }}`.
+- Whether `{{ tertiary_hypothesis }}`.
+- Whether `{{ quaternary_hypothesis }}`.
 
-| File | Use |
-|------|-----|
-| `environment.yml` | preferred Conda environment |
-| `requirements.txt` | `venv` / `pip` environment |
+## Expected Comparisons
 
-Conda:
+| Comparison | Interpretation | Group size |
+|---|---|---|
+| `{{ comparison_1 }}` | `{{ comparison_1_interpretation }}` | `{{ comparison_1_group_size }}` |
+| `{{ comparison_2 }}` | `{{ comparison_2_interpretation }}` | `{{ comparison_2_group_size }}` |
+| `{{ comparison_3 }}` | `{{ comparison_3_interpretation }}` | `{{ comparison_3_group_size }}` |
+| `{{ comparison_4 }}` | `{{ comparison_4_interpretation }}` | `{{ comparison_4_group_size }}` |
 
-```bash
-conda env create -f environment.yml
-conda activate notebook_proteomics
-```
+## Publication-Level Notes
 
-venv:
+The root numbered markdown files (`*.md`) record the project design, file inventory, metadata decisions, methods, and result summaries in a format that can be adapted directly in manuscript writing.
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+| Area | File |
+|---|---|
+| Background and study scope | [00_Background.md](./00_Background.md) |
+| Inputs and outputs | [01_Files.md](./01_Files.md) |
+| Sample design and comparisons | [02_Metadata.md](./02_Metadata.md) |
+| Experimental and computational methods | [03_Methods.md](./03_Methods.md) |
+| Current results summary | [**04_Results.md**](./04_Results.md) |
+| Scientific Introduction | [05_Introduction.md](./05_Introduction.md) |
 
-Important dependency notes:
+## Analysis Status
 
-- `openpyxl` is required for the current Excel-based raw data exports to pipeline config.
-- Plotly static `PNG`/`SVG` export currently depends on Kaleido plus a working native Chrome or Chromium installation.
-- If no compatible browser is available, the plotting scripts still write HTML outputs and skip static export with a warning.
+⬜ Raw input data file validated: [{{ raw_data_file }}](./workflow/00_raw_data/)
+⬜ Metadata source file validated: [{{ metadata_source_file }}](./workflow/00_raw_data/)
+⬜ Final sample metadata file prepared: [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv)
+⬜ Final comparison file prepared: [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv)
+⬜ Main [notebook run](./workflow/scripts/notebooks/proteomics_analysis.ipynb) completed and outputs were written in [**workflow/**](./workflow/)
 
-<details><summary><i>Optional Linux or HPC workaround for PNG/SVG figure export</i></summary>
+Documentation from workflow execution: [**Final report**](./workflow/final_report/README.md)
 
-If static Plotly export fails on Linux because no usable Chrome or Chromium is available in the runtime environment, a user-space Chromium install can be used without changing the pipeline defaults.
-
-Validated Ubuntu `arm64` recipe:
-
-```bash
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/pip install playwright
-.venv/bin/python -m playwright install chromium
-sudo apt-get update
-sudo apt-get install -y \
-  libnspr4 libnss3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 \
-  libxcb1 libxkbcommon0 libasound2t64 libgbm1 libx11-6 libxext6 \
-  libcairo2 libpango-1.0-0 libxcomposite1 libxdamage1 libxfixes3 \
-  libxrandr2 libatspi2.0-0t64
-```
-
-If Plotly or Kaleido still prefers a broken browser previously downloaded by `plotly_get_chrome` or `choreo_get_chrome`, point the local choreographer browser path at the working Chromium binary for that environment. In the Ubuntu validation environment, the working override was:
-
-```bash
-mv ~/.local/share/choreographer/deps/chrome-linux64/chrome \
-   ~/.local/share/choreographer/deps/chrome-linux64/chrome.x86_backup
-ln -s ~/.cache/ms-playwright/chromium-*/chrome-linux/chrome \
-   ~/.local/share/choreographer/deps/chrome-linux64/chrome
-```
-
-This is an environment-level workaround for Linux systems that do not already provide a working native browser. On macOS and standard desktop setups, prefer the system Chrome or Chromium installation and avoid custom overrides unless static export fails.
-</details>
-
-
-## Required project-specific inputs
-
-These files must be completed before analysis:
-
-| File | Purpose |
-|------|---------|
-| `workflow/00_raw_data/config/project_manifest.yaml` | one source of truth for project id, paths, notebook name, data type, normalization choices |
-| `workflow/00_raw_data/config/sample_metadata.csv` | sample-level metadata used for grouping, plotting, and table generation |
-| `workflow/00_raw_data/config/comparisons.csv` | all requested comparisons and thresholds |
-
-Guides:
-- `workflow/00_raw_data/README.md` - raw data intake notes and optional preprocessing record 
-- `workflow/scripts/README.md` - index of actual scripts present in `workflow/scripts/` 
-
-
-## Project structure for proteomics analysis
-
-The `workflow/` folder is meant to be the active analysis worktree. The root numbered `.md` files remain project-summary and publication-facing documents.
-
-```text
-workflow/
-├── 00_raw_data/              # starting point: raw data (xlsx), pipeline config, notes
-│   └── config/               # project manifest, metadata, and comparison definitions
-├── 01_qc_normalization/      # PRTC checks, normalization diagnostics, normalized matrices
-├── 02_statistics/            # per-comparison tests and result tables
-├── 03_visualization/         # volcano, heatmap, PCA, PLS-DA notes and output/
-├── 04_secondary_analyses/    # extra comparison sets & plots, project-specific follow-up
-├── final_report/             # compiled result narrative and manuscript-facing figures
-└── scripts/                  # reusable scripts, helpers, and execution notebooks
-```
-
-
-## Documentation for manuscript writing
-
-| File | Phase | Description |
-|------|-------|-------------|
-| `00_Background.md` | project | project context, aims, collaborators, decisions |
-| `01_Files.md` | analysis | source files, exports, locations, expected outputs |
-| `02_Metadata.md` | analysis | sample metadata, grouping rules, comparison design |
-| `03_Methods.md` | analysis | experimental and computational methods |
-| `04_Results.md` | analysis | summary of QC, normalization, statistics, plots |
-| `05_Introduction.md` | paper | manuscript introduction draft |
-| `06_Discussion.md` | paper | manuscript discussion draft |
-| `07_Supplementary.md` | paper | optional extra figures, comparisons, notes |
-| `08_References.md` | paper | methods and manuscript references |
-| `09_AuthorInfo.md` | paper | authors, affiliations, funding, acknowledgments |
-| `README.md` | general | overview of the template and expected workflow |
-| `othernotes.md` | general | scratchpad for unresolved notes and follow-up items |
+| Area | File |
+|---|---|
+| Raw-data intake notes | [workflow/00_raw_data/README.md](./workflow/00_raw_data/README.md) |
+| Workflow config files | [workflow/00_raw_data/config/README.md](./workflow/00_raw_data/config/README.md) |
+| QC and normalization outputs | [workflow/01_qc_normalization/README.md](./workflow/01_qc_normalization/README.md) |
+| Statistics outputs | [workflow/02_statistics/README.md](./workflow/02_statistics/README.md) |
+| Visualization outputs | [workflow/03_visualization/README.md](./workflow/03_visualization/README.md) |
+| Script and notebook entry points | [workflow/scripts/README.md](./workflow/scripts/README.md) |

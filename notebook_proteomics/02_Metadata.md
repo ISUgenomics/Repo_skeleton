@@ -1,63 +1,67 @@
-#### 02_Metadata.md
+# 02_Metadata
 
-<!--
-Editor notes:
-- This file should agree with workflow/00_raw_data/config/sample_metadata.csv and workflow/00_raw_data/config/comparisons.csv.
-- Do not define comparisons first in the notebook.
-- If sample names change, update every location immediately.
+This file summarizes the finalized design recorded in [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv) and [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv).
 
-Copy-paste status snippets:
-- ⬜ validation pending
-- ✅ validation complete
--->
+<!-- Editor guide: use `✅` only after the project-specific metadata and comparisons have been validated in the completed run. -->
 
-[Experimental Design](#experimental-design)
-[Required Metadata Fields](#required-metadata-fields)
-[Sample Metadata Table](#sample-metadata-table)
-[Comparison Table](#comparison-table)
-[Validation Checks](#validation-checks)
+- [Design Summary](#design-summary)
+  - [Sample Groups](#sample-groups)
+  - [Required Metadata Columns](#required-metadata-columns)
+- [Requested Comparisons](#requested-comparisons)
+- [Validation Status](#validation-status)
 
----
+## Design Summary
 
-- **Date created:** [YYYY-MM-DD]
-- **Last updated:** [YYYY-MM-DD]
+| Factor | Levels |
+|---|---|
+| `{{ factor_1_name }}` | `{{ factor_1_levels }}` |
+| `{{ factor_2_name }}` | `{{ factor_2_levels }}` |
+| `group` | `{{ full_groups }}` |
 
-## Experimental Design
+### Sample Groups
 
-> [REQUIRED: brief summary of sample layout and factors]
+| Group | Sample IDs | Count |
+|---|---|---|
+| `{{ group_1 }}` | `{{ group_1_sample_ids }}` | `{{ group_1_count }}` |
+| `{{ group_2 }}` | `{{ group_2_sample_ids }}` | `{{ group_2_count }}` |
+| `{{ group_3 }}` | `{{ group_3_sample_ids }}` | `{{ group_3_count }}` |
+| `{{ group_4 }}` | `{{ group_4_sample_ids }}` | `{{ group_4_count }}` |
 
-## Required Metadata Fields
+⬜ All [`n={{ sample_count }}`] samples intended for the main run are represented after metadata finalization.  
 
-Minimum required columns in `sample_metadata.csv`:
+### Required Metadata Columns
 
-| Column | Required | Description |
-|--------|----------|-------------|
-| `sample_id` | yes | final short sample name used in plots and matrices |
-| `source_column` | yes | original column name from provider export |
-| `group` | yes | primary grouping used in comparisons |
-| `replicate` | yes | biological or technical replicate id |
-| `batch_or_run` | yes | run, fraction, plate, or batch field |
-| `include` | yes | `TRUE/FALSE` flag for analysis inclusion |
-| `notes` | no | special handling notes |
+⬜ All required columns are present in [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv):  
 
-Add project-specific columns as needed, for example `tissue`, `timepoint`, `treatment`, `animal_id`, `fraction`, `sex`, or `dose`.
+- `sample_id`
+- `source_column`
+- `{{ primary_grouping_column }}`
+- `{{ secondary_grouping_column }}`
+- `group`
+- `replicate`
+- `batch_or_run`
+- `include`
 
-## Sample Metadata Table
+The workflow-executed sample table is [workflow/01_qc_normalization/sample_metadata_used.csv](./workflow/01_qc_normalization/sample_metadata_used.csv).
 
-| sample_id | source_column | group | replicate | batch_or_run | include | notes |
-|-----------|---------------|-------|-----------|--------------|---------|-------|
-| `[REQUIRED]` | `[REQUIRED]` | `[REQUIRED]` | `[REQUIRED]` | `[REQUIRED]` | `TRUE` | |
+## Requested Comparisons
 
-## Comparison Table
+Only these requested comparisons should be computed. Other possible combinations implied by the design should remain disabled unless they were explicitly requested for the project.
 
-| comparison_id | group1 | group2 | use_qvalue | pvalue_cutoff | qvalue_cutoff | abs_log2fc_cutoff | enabled |
-|---------------|--------|--------|------------|---------------|---------------|-------------------|---------|
-| `[REQUIRED]` | `[REQUIRED]` | `[REQUIRED]` | `TRUE` | `0.05` | `0.05` | `1` | `TRUE` |
+| comparison_id | grouping_column | group1 | group2 | cutoffs |
+|---|---|---|---|---|
+| `{{ comparison_1_id }}` | `{{ comparison_1_grouping_column }}` | `{{ comparison_1_group1 }}` | `{{ comparison_1_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
+| `{{ comparison_2_id }}` | `{{ comparison_2_grouping_column }}` | `{{ comparison_2_group1 }}` | `{{ comparison_2_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
+| `{{ comparison_3_id }}` | `{{ comparison_3_grouping_column }}` | `{{ comparison_3_group1 }}` | `{{ comparison_3_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
+| `{{ comparison_4_id }}` | `{{ comparison_4_grouping_column }}` | `{{ comparison_4_group1 }}` | `{{ comparison_4_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
 
-## Validation Checks
+## Validation Status
 
-- ⬜ every `source_column` exists in the provider export
-- ⬜ every `sample_id` is unique
-- ⬜ every enabled comparison has at least 3 samples per group, or the exception is documented
-- ⬜ excluded samples are flagged explicitly and explained
-- ⬜ notebook uses these tables instead of hardcoded group lists
+⬜ Every `source_column` in [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv) matched a raw-data abundance column.  
+⬜ Every `sample_id` is unique.  
+⬜ All [`n={{ sample_count }}`] intended samples were retained for the main run, or exclusions are documented explicitly.  
+⬜ All [`n={{ expected_group_count }}`] expected full treatment groups are represented in the metadata.  
+⬜ Main-effect comparisons are supported by explicit columns [`{{ main_effect_columns }}`].  
+⬜ Within-context or full-group comparisons are supported by the explicit column: [`group`].  
+⬜ All [`n={{ requested_comparison_count }}`] requested comparisons are defined in [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv) with explicit grouping columns and thresholds.  
+⬜ The notebook used the config files rather than hardcoded sample lists.  
