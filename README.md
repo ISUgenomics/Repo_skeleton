@@ -64,7 +64,7 @@ Here’s a categorised list of common bioinformatics analysis pipelines, for whi
 
 | *ready* | *template notebook* | *description* |
 |---------|---------------------|---------------| 
-[  ] | **notebook_proteomics/**          | identification and quantification of proteins from LC-MS/MS data  
+[ x ] | [**notebook_proteomics/**](notebook_proteomics/)          | identification and quantification of proteins from LC-MS/MS data  
 [  ] | **notebook_phosphoproteomics/**   | analysis of post-translational modifications (PTMs) like phosphorylation  
 
 
