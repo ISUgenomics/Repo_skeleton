@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "required_top_level_keys": [
+    "project_context",
+    "focus_areas",
+    "candidate_references",
+    "discussion_support"
+  ],
+  "project_context": {
+    "analysis_type": "string",
+    "tissue_or_material": "string",
+    "organism_or_system": "string",
+    "primary_factor_name": "string",
+    "secondary_factor_name": "string",
+    "strongest_comparison": "string",
+    "weakest_comparison": "string"
+  },
+  "focus_areas_item": {
+    "name": "string",
+    "target_section": "string",
+    "subsection": "string",
+    "status": "planned|completed|partial|not_found",
+    "notes": "string"
+  },
+  "candidate_reference_item": {
+    "focus_area": "string",
+    "target_file": "string",
+    "target_subsection": "string",
+    "citation_text": "string",
+    "source_url": "string",
+    "source_type": "primary|review|official|other",
+    "validation_status": "candidate|validated|rejected",
+    "evidence_note": "string",
+    "matched_context": [
+      "string"
+    ]
+  },
+  "discussion_support_item": {
+    "comparison_id": "string",
+    "protein_or_theme": "string",
+    "claim_type": "background|supporting_evidence|mechanistic_hint|limitation",
+    "evidence_note": "string",
+    "source_url": "string",
+    "validation_status": "candidate|validated|rejected"
+  }
+}

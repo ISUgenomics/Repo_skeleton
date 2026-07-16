@@ -1,0 +1,104 @@
+README.md:
+  uses:
+    - project_title
+    - one_sentence_summary
+    - organism_or_system
+    - sample_count
+    - tissue_or_material
+    - conditions_or_groups
+    - main_biological_question
+    - raw_data_file
+    - metadata_source_file
+
+00_Background.md:
+  uses:
+    - project_title
+    - organism_or_system
+    - tissue_or_material
+    - sample_count
+    - platform
+    - raw_data_format
+    - full_groups
+    - group_size
+    - principal_investigator
+    - primary_contact
+    - data_source_or_facility
+    - analysis_group_or_facility
+    - analysis_lead
+    - project_contact
+
+01_Files.md:
+  uses:
+    - raw_data_file
+    - metadata_source_file
+
+02_Metadata.md:
+  uses:
+    - sample_count
+    - full_groups
+
+03_Methods.md:
+  uses:
+    - raw_data_file
+    - tissue_or_material
+    - organism_or_system
+    - platform
+    - psm_threshold
+    - abundance_column_pattern
+    - primary_normalization
+    - secondary_normalization
+    - astral_mode
+    - zero_handling_description
+
+04_Results.md:
+  uses:
+    - raw_data_file
+    - sample_count
+
+05_Introduction.md:
+  uses:
+    - tissue_or_material
+    - organism_or_system
+    - primary_hypothesis
+
+06_Discussion.md:
+  uses: []
+
+08_References.md:
+  uses: []
+
+09_AuthorInfo.md:
+  uses: []
+
+workflow/00_raw_data/README.md:
+  uses:
+    - raw_data_file
+    - metadata_source_file
+    - raw_data_format
+
+workflow/01_qc_normalization/README.md:
+  uses:
+    - raw_data_file
+    - psm_threshold
+    - primary_normalization
+    - secondary_normalization
+
+workflow/02_statistics/README.md:
+  uses:
+    - sample_count
+
+workflow/03_visualization/README.md:
+  uses: []
+
+workflow/04_secondary_analyses/README.md:
+  uses: []
+
+workflow/final_report/README.md:
+  uses:
+    - raw_data_file
+    - metadata_source_file
+    - sample_count
+    - psm_threshold
+    - abundance_column_pattern
+    - primary_normalization
+    - astral_mode

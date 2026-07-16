@@ -1,0 +1,50 @@
+required_files:
+  - README.md
+  - 00_Background.md
+  - 01_Files.md
+  - 02_Metadata.md
+  - 03_Methods.md
+  - 04_Results.md
+  - 05_Introduction.md
+  - 06_Discussion.md
+  - 08_References.md
+  - workflow/00_raw_data/config/project_manifest.yaml
+  - workflow/00_raw_data/config/sample_metadata.csv
+  - workflow/00_raw_data/config/comparisons.csv
+
+required_variables:
+  - project_title
+  - one_sentence_summary
+  - organism_or_system
+  - tissue_or_material
+  - sample_count
+  - main_biological_question
+  - raw_data_file
+  - psm_threshold
+  - abundance_column_pattern
+  - primary_normalization
+  - astral_mode
+
+required_outputs_after_run:
+  - workflow/01_qc_normalization/normalized_abundance_matrix.csv
+  - workflow/02_statistics/significant_protein_counts.csv
+  - workflow/03_visualization/output
+  - workflow/final_report/README.md
+
+optional_docs_with_unresolved_tokens:
+  - 08_References.md
+  - 09_AuthorInfo.md
+
+optional_unresolved_tokens:
+  - comparison_1_volcano_png
+  - comparison_1_heatmap_png
+  - comparison_1_pca_pc1_pc2_png
+  - comparison_1_pca_pc1_pc3_png
+  - comparison_1_pca_pc2_pc3_png
+  - comparison_1_plsda_png
+  - example_volcano
+  - example_heatmap
+  - example_pca
+  - example_plsda
+
+unresolved_token_pattern: "\\{\\{\\s*[a-zA-Z0-9_]+\\s*\\}\\}"

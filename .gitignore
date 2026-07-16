@@ -1,6 +1,8 @@
 bad*
 temp*
 Temp*
+!notebook_proteomics/template/
+!notebook_proteomics/template/**
 work
 out_dir
 .DS_Store

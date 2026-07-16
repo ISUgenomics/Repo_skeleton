@@ -1,0 +1,89 @@
+template_id: notebook_proteomics
+analysis_type: proteomics
+version: 1
+analysis_guides: template/analysis_guides.yaml
+research_plan: template/research.yaml
+
+execution:
+  primary_mode: notebook
+  notebook: workflow/scripts/notebooks/proteomics_analysis.ipynb
+  optional_follow_up_notebook: workflow/scripts/notebooks/Remake_Plots.ipynb
+  executor_plan: template/executor.yaml
+
+environment:
+  venv_dir: .venv
+  requirements_file: requirements.txt
+  python_bin: .venv/bin/python
+  pip_bin: .venv/bin/pip
+  system_prerequisites:
+    - python3-pip
+    - python3.12-venv
+
+setup:
+  config_manifest: workflow/00_raw_data/config/project_manifest.yaml
+  metadata_file: workflow/00_raw_data/config/sample_metadata.csv
+  comparisons_file: workflow/00_raw_data/config/comparisons.csv
+
+helpers:
+  config:
+    script: workflow/scripts/python/config_gen.py
+  metadata:
+    script: workflow/scripts/python/metadata_gen.py
+  astral_mode:
+    script: workflow/scripts/python/infer_astral_mode.py
+  docs_extractors:
+    - workflow/scripts/python/docs/extract_project_context.py
+    - workflow/scripts/python/docs/extract_metadata_summary.py
+    - workflow/scripts/python/docs/extract_statistics_summary.py
+    - workflow/scripts/python/docs/extract_visualization_inventory.py
+    - workflow/scripts/python/docs/extract_run_summary.py
+    - workflow/scripts/python/docs/extract_results_report_fields.py
+    - workflow/scripts/python/docs/extract_execution_report_fields.py
+    - workflow/scripts/python/docs/extract_significant_hits.py
+
+scripts:
+  execution_helpers:
+    - workflow/scripts/python/filter_and_Normalize.py
+    - workflow/scripts/python/Stats.py
+    - workflow/scripts/python/volcano_plotter.py
+    - workflow/scripts/python/heatmap_plotter.py
+    - workflow/scripts/python/pca_plotter.py
+    - workflow/scripts/python/helpers.py
+  docs_helpers:
+    - workflow/scripts/python/docs/common.py
+    - workflow/scripts/python/docs/extract_project_context.py
+    - workflow/scripts/python/docs/extract_metadata_summary.py
+    - workflow/scripts/python/docs/extract_statistics_summary.py
+    - workflow/scripts/python/docs/extract_visualization_inventory.py
+    - workflow/scripts/python/docs/extract_run_summary.py
+    - workflow/scripts/python/docs/extract_results_report_fields.py
+    - workflow/scripts/python/docs/extract_execution_report_fields.py
+    - workflow/scripts/python/docs/extract_significant_hits.py
+
+outputs:
+  raw_data_step: workflow/00_raw_data
+  qc_step: workflow/01_qc_normalization
+  statistics_step: workflow/02_statistics
+  visualization_step: workflow/03_visualization
+  secondary_step: workflow/04_secondary_analyses
+  final_report: workflow/final_report/README.md
+
+docs:
+  root:
+    - README.md
+    - 00_Background.md
+    - 01_Files.md
+    - 02_Metadata.md
+    - 03_Methods.md
+    - 04_Results.md
+    - 05_Introduction.md
+    - 06_Discussion.md
+    - 08_References.md
+    - 09_AuthorInfo.md
+  workflow:
+    - workflow/00_raw_data/README.md
+    - workflow/01_qc_normalization/README.md
+    - workflow/02_statistics/README.md
+    - workflow/03_visualization/README.md
+    - workflow/04_secondary_analyses/README.md
+    - workflow/final_report/README.md

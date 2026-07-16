@@ -1,0 +1,54 @@
+version: 1
+analysis_type: proteomics
+
+inputs:
+  notes:
+    - Raw proteomics data and any metadata source file should be placed in workflow/00_raw_data/.
+    - Project request context may be provided in project correspondence, root notes, or prompt text.
+    - Additional project-context files may be placed in workflow/00_raw_data/, preferably as plain `*.txt` files such as `correspondence.txt`, `summary.txt`, or `biological_question.txt`.
+    - A single plain-text context file may also include additional manuscript-support sections such as authors, affiliations, funding, acknowledgements, or references.
+
+startup:
+  notes:
+    - The expected startup path for this template is environment bootstrap, config generation, metadata generation, manifest review, then notebook execution.
+    - `sample_metadata.csv` and `comparisons.csv` are the authoritative project-specific execution tables for this template.
+    - In full or prepare mode, template starter files under `workflow/00_raw_data/config/` should be treated as placeholders and overwritten by declared setup helpers.
+    - When an external metadata source file is present, `metadata_gen.py` should infer the header row and common column mappings automatically if explicit selectors were not supplied.
+    - Template-specific docs extractors should convert any relevant `workflow/00_raw_data/*.txt` files into structured context summaries before documentation autofill.
+    - Unrecognized `*.txt` inputs should still be preserved as plain-text context fields so they remain available to downstream documentation logic.
+    - When a single text blob includes recognizable contact headers and section headings, template-specific docs extractors should infer as many structured documentation fields as possible without inventing unsupported values.
+
+helpers:
+  setup:
+    - workflow/scripts/python/config_gen.py
+    - workflow/scripts/python/metadata_gen.py
+    - workflow/scripts/python/infer_astral_mode.py
+  execution:
+    - workflow/scripts/python/filter_and_Normalize.py
+    - workflow/scripts/python/Stats.py
+    - workflow/scripts/python/volcano_plotter.py
+    - workflow/scripts/python/heatmap_plotter.py
+    - workflow/scripts/python/pca_plotter.py
+    - workflow/scripts/python/helpers.py
+  docs:
+    - workflow/scripts/python/docs/extract_project_context.py
+    - workflow/scripts/python/docs/extract_metadata_summary.py
+    - workflow/scripts/python/docs/extract_statistics_summary.py
+    - workflow/scripts/python/docs/extract_visualization_inventory.py
+    - workflow/scripts/python/docs/extract_results_report_fields.py
+    - workflow/scripts/python/docs/extract_run_summary.py
+    - workflow/scripts/python/docs/extract_significant_hits.py
+
+docs:
+  execution_vs_narrative:
+    - workflow docs should record execution facts, checks, outputs, and troubleshooting notes
+    - root docs should summarize study context, methods, results, and manuscript support
+  results:
+    - statistical conclusions should be derived primarily from workflow/02_statistics outputs
+    - visualization conclusions should stay conservative unless clearly supported by generated plots and extracted hit tables
+
+interpretation:
+  notes:
+    - p-value and q-value should remain distinct throughout docs and summaries
+    - significant-hit tables should prefer unique accessions with explicit significance labels
+    - nominal results should not be overstated as validated findings when q-value support is absent

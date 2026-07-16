@@ -1,0 +1,1286 @@
+project_title:
+  scope: global
+  placeholder: "[Project Title]"
+  required: true
+  description: Project title used in root headings.
+
+one_sentence_summary:
+  scope: global
+  placeholder: "[One-sentence project summary]"
+  required: true
+  description: Short summary placed directly below the main title.
+
+organism_or_system:
+  scope: global
+  placeholder: "[Organism or system]"
+  required: true
+  description: Organism, species, cell system, or study system.
+
+tissue_or_material:
+  scope: global
+  placeholder: "[Tissue or material]"
+  required: true
+  description: Main biological material used for proteomics.
+
+sample_count:
+  scope: global
+  placeholder: "[Sample count]"
+  required: true
+  description: Total number of analyzed samples.
+
+conditions_or_groups:
+  scope: global
+  placeholder: "[Conditions or groups]"
+  required: true
+  description: Short summary of the compared conditions.
+
+main_biological_question:
+  scope: global
+  placeholder: "[Main biological question]"
+  required: true
+  description: Plain-language study question.
+
+primary_group_1:
+  scope: global
+  placeholder: "[Primary group 1]"
+  required: false
+  description: First primary design group.
+
+primary_group_2:
+  scope: global
+  placeholder: "[Primary group 2]"
+  required: false
+  description: Second primary design group.
+
+secondary_group_1:
+  scope: global
+  placeholder: "[Secondary group 1]"
+  required: false
+  description: First secondary design group.
+
+secondary_group_2:
+  scope: global
+  placeholder: "[Secondary group 2]"
+  required: false
+  description: Second secondary design group.
+
+primary_group_labels_note:
+  scope: global
+  placeholder: "[Short note explaining the group labels]"
+  required: false
+  description: Short note below the design table in README.
+
+design_note:
+  scope: 00_Background.md
+  placeholder: "[Design note]"
+  required: false
+  description: Short explanatory note about the study design.
+
+biological_question:
+  scope: README.md
+  placeholder: "[Biological question]"
+  required: true
+  description: Plain-language statement of the project question.
+
+primary_hypothesis:
+  scope: README.md
+  placeholder: "[Primary biological hypothesis]"
+  required: true
+  description: Main top-level hypothesis.
+
+secondary_hypothesis:
+  scope: README.md
+  placeholder: "[Secondary proteomic hypothesis]"
+  required: false
+  description: First supporting proteomic hypothesis.
+
+tertiary_hypothesis:
+  scope: README.md
+  placeholder: "[Tertiary proteomic hypothesis]"
+  required: false
+  description: Second supporting proteomic hypothesis.
+
+quaternary_hypothesis:
+  scope: README.md
+  placeholder: "[Additional proteomic hypothesis]"
+  required: false
+  description: Third supporting proteomic hypothesis.
+
+raw_data_file:
+  scope: global
+  placeholder: "[Raw data file]"
+  required: true
+  description: Main raw-data file used for the run.
+
+metadata_source_file:
+  scope: global
+  placeholder: "[Metadata source file]"
+  required: false
+  description: Optional metadata source workbook or table.
+
+principal_investigator:
+  scope: 00_Background.md
+  placeholder: "[Principal Investigator]"
+  required: false
+  description: Principal investigator name and contact.
+
+primary_contact:
+  scope: 00_Background.md
+  placeholder: "[Primary contact]"
+  required: false
+  description: Primary project contact.
+
+data_source_or_facility:
+  scope: 00_Background.md
+  placeholder: "[Data source or facility]"
+  required: false
+  description: Facility or collaborator providing the data.
+
+analysis_group_or_facility:
+  scope: 00_Background.md
+  placeholder: "[Analysis group or facility]"
+  required: false
+  description: Group performing the analysis.
+
+analysis_lead:
+  scope: 00_Background.md
+  placeholder: "[Analysis lead]"
+  required: false
+  description: Main analysis lead.
+
+project_contact:
+  scope: 00_Background.md
+  placeholder: "[Project contact]"
+  required: false
+  description: Day-to-day project contact.
+
+key_correspondence_date:
+  scope: 00_Background.md
+  placeholder: "[Key correspondence date]"
+  required: false
+  description: Date of the main project request or confirmation.
+
+key_correspondence_sender:
+  scope: 00_Background.md
+  placeholder: "[Key correspondence sender]"
+  required: false
+  description: Sender of the key request or correspondence note.
+
+key_correspondence_excerpt:
+  scope: 00_Background.md
+  placeholder: "[Key correspondence excerpt]"
+  required: false
+  description: Quoted project request or key email excerpt.
+
+platform:
+  scope: global
+  placeholder: "[Proteomics platform]"
+  required: true
+  description: Experimental platform, for example untargeted LC-MS/MS proteomics.
+
+raw_data_format:
+  scope: global
+  placeholder: "[Raw data format]"
+  required: true
+  description: Raw-data format, for example grouped abundance Excel file.
+
+full_groups:
+  scope: global
+  placeholder: "[Full group labels]"
+  required: false
+  description: Full treatment or group labels.
+
+group_size:
+  scope: global
+  placeholder: "[Group size]"
+  required: false
+  description: Typical group size summary.
+
+primary_factor_name_and_levels:
+  scope: 00_Background.md
+  placeholder: "[Primary factor name and levels]"
+  required: false
+  description: Short summary of the primary design factor and levels.
+
+secondary_factor_name_and_levels:
+  scope: 00_Background.md
+  placeholder: "[Secondary factor name and levels]"
+  required: false
+  description: Short summary of the secondary design factor and levels.
+
+requested_comparison_scope:
+  scope: global
+  placeholder: "[Requested comparison scope]"
+  required: false
+  description: Short summary of which comparisons should remain enabled.
+
+psm_threshold:
+  scope: global
+  placeholder: "[PSM threshold]"
+  required: true
+  description: PSM threshold used before downstream analysis.
+
+abundance_column_pattern:
+  scope: global
+  placeholder: "[Abundance column pattern]"
+  required: true
+  description: Pattern used to identify abundance columns.
+
+primary_normalization:
+  scope: global
+  placeholder: "[Primary normalization method]"
+  required: true
+  description: Main normalization method.
+
+secondary_normalization:
+  scope: global
+  placeholder: "[Secondary normalization or none]"
+  required: false
+  description: Secondary normalization or correction step.
+
+astral_mode:
+  scope: global
+  placeholder: "[true or false]"
+  required: true
+  description: Final astral_mode setting.
+
+zero_handling_description:
+  scope: global
+  placeholder: "[Zero handling description]"
+  required: true
+  description: Explanation of how zeros were interpreted in the run.
+
+raw_data_notes:
+  scope: 01_Files.md
+  placeholder: "[Raw data notes]"
+  required: false
+metadata_source_notes:
+  scope: 01_Files.md
+  placeholder: "[Metadata source notes]"
+  required: false
+visible_only_copy_status:
+  scope: 01_Files.md
+  placeholder: "[Visible-only copy status]"
+  required: false
+
+factor_1_name:
+  scope: 02_Metadata.md
+  placeholder: "[Factor 1 name]"
+  required: false
+factor_1_levels:
+  scope: 02_Metadata.md
+  placeholder: "[Factor 1 levels]"
+  required: false
+factor_2_name:
+  scope: 02_Metadata.md
+  placeholder: "[Factor 2 name]"
+  required: false
+factor_2_levels:
+  scope: 02_Metadata.md
+  placeholder: "[Factor 2 levels]"
+  required: false
+group_1:
+  scope: 02_Metadata.md
+  placeholder: "[Group 1]"
+  required: false
+group_1_sample_ids:
+  scope: 02_Metadata.md
+  placeholder: "[Group 1 sample IDs]"
+  required: false
+group_1_count:
+  scope: 02_Metadata.md
+  placeholder: "[Group 1 count]"
+  required: false
+group_2:
+  scope: 02_Metadata.md
+  placeholder: "[Group 2]"
+  required: false
+group_2_sample_ids:
+  scope: 02_Metadata.md
+  placeholder: "[Group 2 sample IDs]"
+  required: false
+group_2_count:
+  scope: 02_Metadata.md
+  placeholder: "[Group 2 count]"
+  required: false
+group_3:
+  scope: 02_Metadata.md
+  placeholder: "[Group 3]"
+  required: false
+group_3_sample_ids:
+  scope: 02_Metadata.md
+  placeholder: "[Group 3 sample IDs]"
+  required: false
+group_3_count:
+  scope: 02_Metadata.md
+  placeholder: "[Group 3 count]"
+  required: false
+group_4:
+  scope: 02_Metadata.md
+  placeholder: "[Group 4]"
+  required: false
+group_4_sample_ids:
+  scope: 02_Metadata.md
+  placeholder: "[Group 4 sample IDs]"
+  required: false
+group_4_count:
+  scope: 02_Metadata.md
+  placeholder: "[Group 4 count]"
+  required: false
+primary_grouping_column:
+  scope: 02_Metadata.md
+  placeholder: "[Primary grouping column]"
+  required: false
+secondary_grouping_column:
+  scope: 02_Metadata.md
+  placeholder: "[Secondary grouping column]"
+  required: false
+expected_group_count:
+  scope: 02_Metadata.md
+  placeholder: "[Expected group count]"
+  required: false
+main_effect_columns:
+  scope: 02_Metadata.md
+  placeholder: "[Main effect columns]"
+  required: false
+requested_comparison_count:
+  scope: 02_Metadata.md
+  placeholder: "[Requested comparison count]"
+  required: false
+
+comparison_1:
+  scope: README.md
+  placeholder: "[Comparison 1]"
+  required: false
+comparison_1_interpretation:
+  scope: README.md
+  placeholder: "[Comparison 1 interpretation]"
+  required: false
+comparison_1_group_size:
+  scope: README.md
+  placeholder: "[Comparison 1 group size]"
+  required: false
+comparison_2:
+  scope: README.md
+  placeholder: "[Comparison 2]"
+  required: false
+comparison_2_interpretation:
+  scope: README.md
+  placeholder: "[Comparison 2 interpretation]"
+  required: false
+comparison_2_group_size:
+  scope: README.md
+  placeholder: "[Comparison 2 group size]"
+  required: false
+comparison_3:
+  scope: README.md
+  placeholder: "[Comparison 3]"
+  required: false
+comparison_3_interpretation:
+  scope: README.md
+  placeholder: "[Comparison 3 interpretation]"
+  required: false
+comparison_3_group_size:
+  scope: README.md
+  placeholder: "[Comparison 3 group size]"
+  required: false
+comparison_4:
+  scope: README.md
+  placeholder: "[Comparison 4]"
+  required: false
+comparison_4_interpretation:
+  scope: README.md
+  placeholder: "[Comparison 4 interpretation]"
+  required: false
+comparison_4_group_size:
+  scope: README.md
+  placeholder: "[Comparison 4 group size]"
+  required: false
+comparison_1_id:
+  scope: global
+  placeholder: "[Comparison 1 ID]"
+  required: false
+comparison_1_grouping_column:
+  scope: global
+  placeholder: "[Comparison 1 grouping column]"
+  required: false
+comparison_1_group1:
+  scope: global
+  placeholder: "[Comparison 1 group 1]"
+  required: false
+comparison_1_group2:
+  scope: global
+  placeholder: "[Comparison 1 group 2]"
+  required: false
+comparison_2_id:
+  scope: global
+  placeholder: "[Comparison 2 ID]"
+  required: false
+comparison_2_grouping_column:
+  scope: global
+  placeholder: "[Comparison 2 grouping column]"
+  required: false
+comparison_2_group1:
+  scope: global
+  placeholder: "[Comparison 2 group 1]"
+  required: false
+comparison_2_group2:
+  scope: global
+  placeholder: "[Comparison 2 group 2]"
+  required: false
+comparison_3_id:
+  scope: global
+  placeholder: "[Comparison 3 ID]"
+  required: false
+comparison_3_grouping_column:
+  scope: global
+  placeholder: "[Comparison 3 grouping column]"
+  required: false
+comparison_3_group1:
+  scope: global
+  placeholder: "[Comparison 3 group 1]"
+  required: false
+comparison_3_group2:
+  scope: global
+  placeholder: "[Comparison 3 group 2]"
+  required: false
+comparison_4_id:
+  scope: global
+  placeholder: "[Comparison 4 ID]"
+  required: false
+comparison_4_grouping_column:
+  scope: global
+  placeholder: "[Comparison 4 grouping column]"
+  required: false
+comparison_4_group1:
+  scope: global
+  placeholder: "[Comparison 4 group 1]"
+  required: false
+comparison_4_group2:
+  scope: global
+  placeholder: "[Comparison 4 group 2]"
+  required: false
+
+input_format:
+  scope: 03_Methods.md
+  placeholder: "[Input format]"
+  required: false
+upper_quartile_normalization:
+  scope: global
+  placeholder: "[Upper quartile normalization]"
+  required: false
+qvalue_plots:
+  scope: global
+  placeholder: "[Q-value plots generated]"
+  required: false
+python_version:
+  scope: 03_Methods.md
+  placeholder: "[Python version]"
+  required: false
+numpy_version:
+  scope: 03_Methods.md
+  placeholder: "[Numpy version]"
+  required: false
+pandas_version:
+  scope: 03_Methods.md
+  placeholder: "[Pandas version]"
+  required: false
+scipy_version:
+  scope: 03_Methods.md
+  placeholder: "[Scipy version]"
+  required: false
+statsmodels_version:
+  scope: 03_Methods.md
+  placeholder: "[Statsmodels version]"
+  required: false
+plotly_version:
+  scope: 03_Methods.md
+  placeholder: "[Plotly version]"
+  required: false
+matplotlib_version:
+  scope: 03_Methods.md
+  placeholder: "[Matplotlib version]"
+  required: false
+seaborn_version:
+  scope: 03_Methods.md
+  placeholder: "[Seaborn version]"
+  required: false
+sklearn_version:
+  scope: 03_Methods.md
+  placeholder: "[Sklearn version]"
+  required: false
+enabled_comparisons_summary:
+  scope: 03_Methods.md
+  placeholder: "[Enabled comparisons summary]"
+  required: false
+
+raw_matrix_rows:
+  scope: 04_Results.md
+  placeholder: "[Raw matrix rows]"
+  required: false
+normalized_matrix_rows:
+  scope: 04_Results.md
+  placeholder: "[Normalized matrix rows]"
+  required: false
+comparison_count:
+  scope: 04_Results.md
+  placeholder: "[Comparison count]"
+  required: false
+qc_samples_excluded_summary:
+  scope: 04_Results.md
+  placeholder: "[QC excluded samples summary]"
+  required: false
+qc_matrix_change_summary:
+  scope: 04_Results.md
+  placeholder: "[QC matrix change summary]"
+  required: false
+qc_normalization_summary:
+  scope: 04_Results.md
+  placeholder: "[QC normalization summary]"
+  required: false
+qc_dataset_note:
+  scope: 04_Results.md
+  placeholder: "[QC dataset note]"
+  required: false
+short_statistical_summary:
+  scope: 04_Results.md
+  placeholder: "[Short statistical summary]"
+  required: false
+comparison_1_label:
+  scope: global
+  placeholder: "[Comparison 1 label]"
+  required: false
+comparison_1_file:
+  scope: global
+  placeholder: "[Comparison 1 file]"
+  required: false
+comparison_1_output_file:
+  scope: global
+  placeholder: "[Comparison 1 output file]"
+  required: false
+comparison_1_p_hits:
+  scope: global
+  placeholder: "[Comparison 1 p hits]"
+  required: false
+comparison_1_q_hits:
+  scope: global
+  placeholder: "[Comparison 1 q hits]"
+  required: false
+comparison_2_label:
+  scope: global
+  placeholder: "[Comparison 2 label]"
+  required: false
+comparison_2_file:
+  scope: global
+  placeholder: "[Comparison 2 file]"
+  required: false
+comparison_2_output_file:
+  scope: global
+  placeholder: "[Comparison 2 output file]"
+  required: false
+comparison_2_p_hits:
+  scope: global
+  placeholder: "[Comparison 2 p hits]"
+  required: false
+comparison_2_q_hits:
+  scope: global
+  placeholder: "[Comparison 2 q hits]"
+  required: false
+comparison_3_label:
+  scope: global
+  placeholder: "[Comparison 3 label]"
+  required: false
+comparison_3_file:
+  scope: global
+  placeholder: "[Comparison 3 file]"
+  required: false
+comparison_3_output_file:
+  scope: global
+  placeholder: "[Comparison 3 output file]"
+  required: false
+comparison_3_p_hits:
+  scope: global
+  placeholder: "[Comparison 3 p hits]"
+  required: false
+comparison_3_q_hits:
+  scope: global
+  placeholder: "[Comparison 3 q hits]"
+  required: false
+comparison_4_label:
+  scope: global
+  placeholder: "[Comparison 4 label]"
+  required: false
+comparison_4_file:
+  scope: global
+  placeholder: "[Comparison 4 file]"
+  required: false
+comparison_4_output_file:
+  scope: global
+  placeholder: "[Comparison 4 output file]"
+  required: false
+comparison_4_p_hits:
+  scope: global
+  placeholder: "[Comparison 4 p hits]"
+  required: false
+comparison_4_q_hits:
+  scope: global
+  placeholder: "[Comparison 4 q hits]"
+  required: false
+strongest_nominal_comparison:
+  scope: 04_Results.md
+  placeholder: "[Strongest nominal comparison]"
+  required: false
+weakest_nominal_comparison:
+  scope: 04_Results.md
+  placeholder: "[Weakest nominal comparison]"
+  required: false
+qvalue_summary:
+  scope: 04_Results.md
+  placeholder: "[Q-value summary]"
+  required: false
+fold_change_balance_summary:
+  scope: 04_Results.md
+  placeholder: "[Fold-change balance summary]"
+  required: false
+asymmetry_or_other_pattern:
+  scope: 04_Results.md
+  placeholder: "[Asymmetry or other pattern]"
+  required: false
+conservative_biological_summary:
+  scope: 04_Results.md
+  placeholder: "[Conservative biological summary]"
+  required: false
+example_volcano:
+  scope: 04_Results.md
+  placeholder: "[Example volcano plot]"
+  required: false
+example_heatmap:
+  scope: 04_Results.md
+  placeholder: "[Example heatmap]"
+  required: false
+example_pca:
+  scope: 04_Results.md
+  placeholder: "[Example PCA plot]"
+  required: false
+example_plsda:
+  scope: 04_Results.md
+  placeholder: "[Example PLS-DA plot]"
+  required: false
+comparison_1_summary:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 summary]"
+  required: false
+comparison_1_group_label_a:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 group label A]"
+  required: false
+comparison_1_group_label_b:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 group label B]"
+  required: false
+comparison_1_sample_ids_a:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 sample IDs A]"
+  required: false
+comparison_1_sample_ids_b:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 sample IDs B]"
+  required: false
+comparison_1_example_accession:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 example accession]"
+  required: false
+comparison_1_example_fold_change:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 example fold change]"
+  required: false
+comparison_1_example_significant:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 example significant]"
+  required: false
+comparison_1_example_description:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 example description]"
+  required: false
+comparison_1_volcano_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 volcano PNG]"
+  required: false
+comparison_1_heatmap_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 heatmap PNG]"
+  required: false
+comparison_1_pca_pc1_pc2_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 PCA PC1 PC2 PNG]"
+  required: false
+comparison_1_pca_pc1_pc3_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 PCA PC1 PC3 PNG]"
+  required: false
+comparison_1_pca_pc2_pc3_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 PCA PC2 PC3 PNG]"
+  required: false
+comparison_1_plsda_png:
+  scope: 04_Results.md
+  placeholder: "[Comparison 1 PLS-DA PNG]"
+  required: false
+plot_family_summary:
+  scope: 04_Results.md
+  placeholder: "[Plot family summary]"
+  required: false
+p_or_q_layer_summary:
+  scope: 04_Results.md
+  placeholder: "[P- or q-layer summary]"
+  required: false
+visual_strongest:
+  scope: 04_Results.md
+  placeholder: "[Visually strongest comparison]"
+  required: false
+visual_weakest:
+  scope: 04_Results.md
+  placeholder: "[Visually weakest comparison]"
+  required: false
+qvalue_plot_limitations:
+  scope: 04_Results.md
+  placeholder: "[Q-value plot limitations]"
+  required: false
+project_specific_visual_observation_1:
+  scope: 04_Results.md
+  placeholder: "[Project-specific visual observation 1]"
+  required: false
+project_specific_visual_observation_2:
+  scope: 04_Results.md
+  placeholder: "[Project-specific visual observation 2]"
+  required: false
+project_specific_visual_observation_3:
+  scope: 04_Results.md
+  placeholder: "[Project-specific visual observation 3]"
+  required: false
+project_specific_visual_observation_4:
+  scope: 04_Results.md
+  placeholder: "[Project-specific visual observation 4]"
+  required: false
+result_summary_scope:
+  scope: 04_Results.md
+  placeholder: "[Result summary scope]"
+  required: false
+strongest_comparison:
+  scope: global
+  placeholder: "[Strongest comparison]"
+  required: false
+weakest_comparison:
+  scope: global
+  placeholder: "[Weakest comparison]"
+  required: false
+additional_result_counts_summary:
+  scope: 04_Results.md
+  placeholder: "[Additional result counts summary]"
+  required: false
+qvalue_result_clause:
+  scope: 04_Results.md
+  placeholder: "[Q-value result clause]"
+  required: false
+main_visual_pattern:
+  scope: 04_Results.md
+  placeholder: "[Main visual pattern]"
+  required: false
+example_annotation_1:
+  scope: 04_Results.md
+  placeholder: "[Example annotation 1]"
+  required: false
+example_annotation_2:
+  scope: 04_Results.md
+  placeholder: "[Example annotation 2]"
+  required: false
+concise_results_conclusion:
+  scope: 04_Results.md
+  placeholder: "[Concise results conclusion]"
+  required: false
+
+biological_relevance:
+  scope: 05_Introduction.md
+  placeholder: "[Biological relevance]"
+  required: false
+main_experimental_factors:
+  scope: 05_Introduction.md
+  placeholder: "[Main experimental factors]"
+  required: false
+primary_factor_name:
+  scope: 05_Introduction.md
+  placeholder: "[Primary factor name]"
+  required: false
+primary_factor_levels:
+  scope: 05_Introduction.md
+  placeholder: "[Primary factor levels]"
+  required: false
+primary_factor_rationale:
+  scope: 05_Introduction.md
+  placeholder: "[Primary factor rationale]"
+  required: false
+primary_factor_question:
+  scope: 05_Introduction.md
+  placeholder: "[Primary factor question]"
+  required: false
+primary_biological_hypothesis:
+  scope: 05_Introduction.md
+  placeholder: "[Primary biological hypothesis]"
+  required: false
+secondary_factor_name:
+  scope: 05_Introduction.md
+  placeholder: "[Secondary factor name]"
+  required: false
+secondary_factor_levels_and_rationale:
+  scope: 05_Introduction.md
+  placeholder: "[Secondary factor levels and rationale]"
+  required: false
+secondary_factor_effect:
+  scope: 05_Introduction.md
+  placeholder: "[Secondary factor effect]"
+  required: false
+confounding_or_context_factor:
+  scope: 05_Introduction.md
+  placeholder: "[Confounding or context factor]"
+  required: false
+interaction_or_context_question:
+  scope: 05_Introduction.md
+  placeholder: "[Interaction or context question]"
+  required: false
+main_factors:
+  scope: 05_Introduction.md
+  placeholder: "[Main factors]"
+  required: false
+prespecified_comparisons_summary:
+  scope: 05_Introduction.md
+  placeholder: "[Prespecified comparisons summary]"
+  required: false
+project_objective_sentence:
+  scope: 05_Introduction.md
+  placeholder: "[Project objective sentence]"
+  required: false
+
+overall_result_pattern:
+  scope: 06_Discussion.md
+  placeholder: "[Overall result pattern]"
+  required: false
+high_level_interpretation:
+  scope: 06_Discussion.md
+  placeholder: "[High-level interpretation]"
+  required: false
+primary_question_interpretation:
+  scope: 06_Discussion.md
+  placeholder: "[Primary question interpretation]"
+  required: false
+example_proteins_or_pathways:
+  scope: 06_Discussion.md
+  placeholder: "[Example proteins or pathways]"
+  required: false
+statistical_caution:
+  scope: 06_Discussion.md
+  placeholder: "[Statistical caution]"
+  required: false
+secondary_question_interpretation:
+  scope: 06_Discussion.md
+  placeholder: "[Secondary question interpretation]"
+  required: false
+context_specific_interpretation:
+  scope: 06_Discussion.md
+  placeholder: "[Context-specific interpretation]"
+  required: false
+important_limit_or_alternative_explanation:
+  scope: 06_Discussion.md
+  placeholder: "[Important limit or alternative explanation]"
+  required: false
+balanced_conclusion:
+  scope: 06_Discussion.md
+  placeholder: "[Balanced conclusion]"
+  required: false
+follow_up_direction:
+  scope: 06_Discussion.md
+  placeholder: "[Follow-up direction]"
+  required: false
+
+validation_date:
+  scope: 08_References.md
+  placeholder: "[Validation date]"
+  required: false
+system_or_tissue_reference_1:
+  scope: 08_References.md
+  placeholder: "[System or tissue reference 1]"
+  required: false
+system_or_tissue_reference_2:
+  scope: 08_References.md
+  placeholder: "[System or tissue reference 2]"
+  required: false
+system_or_tissue_reference_3:
+  scope: 08_References.md
+  placeholder: "[System or tissue reference 3]"
+  required: false
+condition_or_treatment_reference_1:
+  scope: 08_References.md
+  placeholder: "[Condition or treatment reference 1]"
+  required: false
+condition_or_treatment_reference_2:
+  scope: 08_References.md
+  placeholder: "[Condition or treatment reference 2]"
+  required: false
+condition_or_treatment_reference_3:
+  scope: 08_References.md
+  placeholder: "[Condition or treatment reference 3]"
+  required: false
+project_specific_reference_1:
+  scope: 08_References.md
+  placeholder: "[Project-specific reference 1]"
+  required: false
+project_specific_reference_2:
+  scope: 08_References.md
+  placeholder: "[Project-specific reference 2]"
+  required: false
+project_specific_reference_3:
+  scope: 08_References.md
+  placeholder: "[Project-specific reference 3]"
+  required: false
+local_relevant_reference_1:
+  scope: 08_References.md
+  placeholder: "[Local relevant reference 1]"
+  required: false
+local_relevant_reference_2:
+  scope: 08_References.md
+  placeholder: "[Local relevant reference 2]"
+  required: false
+
+author_1:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Author 1]"
+  required: false
+author_2:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Author 2]"
+  required: false
+author_3:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Author 3]"
+  required: false
+affiliation_1:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Affiliation 1]"
+  required: false
+affiliation_2:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Affiliation 2]"
+  required: false
+affiliation_3:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Affiliation 3]"
+  required: false
+contribution_1:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Contribution 1]"
+  required: false
+contribution_2:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Contribution 2]"
+  required: false
+contribution_3:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Contribution 3]"
+  required: false
+funding_statement:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Funding statement]"
+  required: false
+acknowledgement_statement:
+  scope: 09_AuthorInfo.md
+  placeholder: "[Acknowledgement statement]"
+  required: false
+
+cleaned_export_used:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Cleaned export used]"
+  required: false
+received_files:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Received files]"
+  required: false
+main_input_file:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Main input file]"
+  required: false
+provided_or_after_preprocessing:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[As provided or after preprocessing]"
+  required: false
+hidden_rows_present:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Hidden rows present]"
+  required: false
+hidden_columns_present:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Hidden columns present]"
+  required: false
+visible_only_used:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Visible-only used]"
+  required: false
+sample_naming_match_status:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Sample naming match status]"
+  required: false
+comparison_group_presence_status:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Comparison group presence status]"
+  required: false
+preprocessing_note_none:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[No preprocessing note]"
+  required: false
+preprocessing_note_visible_only:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Visible-only note]"
+  required: false
+preprocessing_note_sample_names:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Sample names note]"
+  required: false
+preprocessing_note_annotations:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Annotations note]"
+  required: false
+preprocessing_note_column_renames:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Column renames note]"
+  required: false
+preprocessing_note_removed_rows:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Removed rows note]"
+  required: false
+visible_only_decision:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Visible-only decision]"
+  required: false
+final_analysis_input:
+  scope: workflow/00_raw_data/README.md
+  placeholder: "[Final analysis input]"
+  required: false
+
+qc_prtc_reviewed:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[PRTC reviewed]"
+  required: false
+qc_zero_only_rows_removed:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Zero-only rows removed]"
+  required: false
+qc_missingness_rows_removed:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Missingness rows removed]"
+  required: false
+qc_missing_values_imputed:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Missing values imputed]"
+  required: false
+qc_excluded_sample_count:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Excluded sample count]"
+  required: false
+qc_excluded_samples:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Excluded samples]"
+  required: false
+final_sample_set:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Final sample set]"
+  required: false
+qc_status:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[QC status]"
+  required: false
+main_qc_note:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Main QC note]"
+  required: false
+normalization_note:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Normalization note]"
+  required: false
+carry_forward_note_for_statistics:
+  scope: workflow/01_qc_normalization/README.md
+  placeholder: "[Carry-forward note for statistics]"
+  required: false
+
+grouping_columns_used:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Grouping columns used]"
+  required: false
+statistics_status:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Statistics status]"
+  required: false
+comparison_deviations:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Comparison deviations]"
+  required: false
+statistical_method_changes:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Statistical method changes]"
+  required: false
+carry_forward_statistics_note:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Carry-forward statistics note]"
+  required: false
+
+volcano_plots_generated:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Volcano plots generated]"
+  required: false
+heatmaps_generated:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Heatmaps generated]"
+  required: false
+pca_plots_generated:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[PCA plots generated]"
+  required: false
+pca_3d_plots_generated:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[3D PCA plots generated]"
+  required: false
+plsda_plots_generated:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[PLS-DA plots generated]"
+  required: false
+volcano_files_present_list:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Volcano files present list]"
+  required: false
+heatmap_files_present_list:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Heatmap files present list]"
+  required: false
+pca_files_present_list:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[PCA files present list]"
+  required: false
+pca3d_files_present_list:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[3D PCA files present list]"
+  required: false
+plsda_files_present_list:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[PLS-DA files present list]"
+  required: false
+visualization_status:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Visualization status]"
+  required: false
+plot_generation_status_note:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Plot generation status note]"
+  required: false
+
+no_secondary_analyses_or_replace:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[No secondary analyses statement]"
+  required: false
+secondary_scope_or_remove:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[Secondary scope]"
+  required: false
+secondary_output_summary_or_remove:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[Secondary output summary]"
+  required: false
+secondary_threshold_changes_or_none:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[Secondary threshold changes]"
+  required: false
+remade_outputs_or_none:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[Remade outputs or none]"
+  required: false
+selected_follow_up_outputs_or_none:
+  scope: workflow/04_secondary_analyses/README.md
+  placeholder: "[Selected follow-up outputs or none]"
+  required: false
+
+final_run_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[Final run status]"
+  required: false
+raw_data_step_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[Raw data step status]"
+  required: false
+raw_data_primary_output:
+  scope: workflow/final_report/README.md
+  placeholder: "[Raw data primary output]"
+  required: false
+raw_data_step_note:
+  scope: workflow/final_report/README.md
+  placeholder: "[Raw data step note]"
+  required: false
+qc_step_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[QC step status]"
+  required: false
+qc_step_note:
+  scope: workflow/final_report/README.md
+  placeholder: "[QC step note]"
+  required: false
+statistics_step_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[Statistics step status]"
+  required: false
+statistics_step_note:
+  scope: workflow/final_report/README.md
+  placeholder: "[Statistics step note]"
+  required: false
+visualization_step_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[Visualization step status]"
+  required: false
+visualization_step_note:
+  scope: workflow/final_report/README.md
+  placeholder: "[Visualization step note]"
+  required: false
+secondary_step_status:
+  scope: workflow/final_report/README.md
+  placeholder: "[Secondary step status]"
+  required: false
+secondary_primary_output_or_none:
+  scope: workflow/final_report/README.md
+  placeholder: "[Secondary primary output or none]"
+  required: false
+secondary_step_note:
+  scope: workflow/final_report/README.md
+  placeholder: "[Secondary step note]"
+  required: false
+enabled_comparison_count:
+  scope: workflow/final_report/README.md
+  placeholder: "[Enabled comparison count]"
+  required: false
+issue_or_none:
+  scope: workflow/final_report/README.md
+  placeholder: "[Issue or none]"
+  required: false
+issue_resolution:
+  scope: workflow/final_report/README.md
+  placeholder: "[Issue resolution]"
+  required: false
+issue_impact:
+  scope: workflow/final_report/README.md
+  placeholder: "[Issue impact]"
+  required: false
+carry_forward_note_1:
+  scope: workflow/final_report/README.md
+  placeholder: "[Carry-forward note 1]"
+  required: false
+carry_forward_note_2:
+  scope: workflow/final_report/README.md
+  placeholder: "[Carry-forward note 2]"
+  required: false
+carry_forward_note_3:
+  scope: workflow/final_report/README.md
+  placeholder: "[Carry-forward note 3]"
+  required: false

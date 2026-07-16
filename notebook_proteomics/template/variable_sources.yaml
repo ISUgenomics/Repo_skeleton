@@ -1,0 +1,178 @@
+project_title:
+  source: manual
+  notes: Short project title normally comes from correspondence or repository naming.
+
+one_sentence_summary:
+  source: manual
+  notes: Human-written summary sentence.
+
+organism_or_system:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: project.organism
+
+tissue_or_material:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: project.material
+
+sample_count:
+  source: sample_metadata
+  file: workflow/00_raw_data/config/sample_metadata.csv
+  rule: count_rows_where_include_true
+
+raw_data_file:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: inputs.raw_data_file
+
+metadata_source_file:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: inputs.metadata_source
+
+full_groups:
+  source: sample_metadata
+  file: workflow/00_raw_data/config/sample_metadata.csv
+  rule: unique_values.group
+
+group_size:
+  source: sample_metadata
+  file: workflow/00_raw_data/config/sample_metadata.csv
+  rule: group_counts_summary
+
+psm_threshold:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: analysis.psm_threshold
+
+abundance_column_pattern:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: analysis.abundance_column_contains
+
+primary_normalization:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: analysis.normalization_primary
+
+secondary_normalization:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: analysis.normalization_secondary
+
+astral_mode:
+  source: project_manifest
+  file: workflow/00_raw_data/config/project_manifest.yaml
+  path: analysis.astral_mode
+
+comparisons:
+  source: comparisons_csv
+  file: workflow/00_raw_data/config/comparisons.csv
+  rule: enabled_rows
+
+significant_hit_counts:
+  source: statistics_summary
+  file: workflow/02_statistics/significant_protein_counts.csv
+  rule: by_comparison
+
+software_versions:
+  source: software_versions
+  file: workflow/01_qc_normalization/software_versions.txt
+  rule: parse_key_value_lines
+
+project_context_values:
+  source: json_bundle
+  file: workflow/scripts/python/docs/project_context.json
+
+results_report_fields:
+  source: json_bundle
+  file: workflow/scripts/python/docs/results_report_fields.json
+
+execution_report_fields:
+  source: json_bundle
+  file: workflow/scripts/python/docs/execution_report_fields.json
+
+enabled_comparison_count:
+  source: json_file
+  file: workflow/scripts/python/docs/metadata_summary.json
+  path: enabled_comparison_count
+
+comparison_count:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: comparison_count
+
+strongest_nominal_comparison:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: strongest_nominal_comparison
+
+strongest_comparison:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: strongest_nominal_comparison
+
+weakest_nominal_comparison:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: weakest_nominal_comparison
+
+weakest_comparison:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: weakest_nominal_comparison
+
+volcano_plots_generated:
+  source: json_file
+  file: workflow/scripts/python/docs/visualization_inventory.json
+  path: aggregate.volcano_plots_generated
+
+heatmaps_generated:
+  source: json_file
+  file: workflow/scripts/python/docs/visualization_inventory.json
+  path: aggregate.heatmaps_generated
+
+pca_plots_generated:
+  source: json_file
+  file: workflow/scripts/python/docs/visualization_inventory.json
+  path: aggregate.pca_plots_generated
+
+pca_3d_plots_generated:
+  source: json_file
+  file: workflow/scripts/python/docs/visualization_inventory.json
+  path: aggregate.pca_3d_plots_generated
+
+plsda_plots_generated:
+  source: json_file
+  file: workflow/scripts/python/docs/visualization_inventory.json
+  path: aggregate.plsda_plots_generated
+
+final_run_status:
+  source: json_file
+  file: workflow/scripts/python/docs/run_summary.json
+  path: final_run_status
+
+comparison_1_label:
+  source: json_file
+  file: workflow/scripts/python/docs/metadata_summary.json
+  path: comparisons.0.comparison_id
+
+comparison_2_label:
+  source: json_file
+  file: workflow/scripts/python/docs/metadata_summary.json
+  path: comparisons.1.comparison_id
+
+comparison_3_label:
+  source: json_file
+  file: workflow/scripts/python/docs/metadata_summary.json
+  path: comparisons.2.comparison_id
+
+comparison_4_label:
+  source: json_file
+  file: workflow/scripts/python/docs/metadata_summary.json
+  path: comparisons.3.comparison_id
+
+issues_and_resolutions:
+  source: run_notes
+  notes: Capture from notebook execution and workflow step documentation.

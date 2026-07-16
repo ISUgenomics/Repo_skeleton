@@ -1,0 +1,106 @@
+version: 1
+
+enabled_when:
+  workflow_complete: true
+  docs_autofill_complete: true
+
+prerequisites:
+  required_files:
+    - workflow/final_report/README.md
+    - workflow/scripts/python/docs/project_context.json
+    - workflow/scripts/python/docs/results_report_fields.json
+    - workflow/scripts/python/docs/run_summary.json
+  required_status:
+    final_run_status: complete
+
+inputs:
+  structured_sources:
+    - workflow/scripts/python/docs/project_context.json
+    - workflow/scripts/python/docs/metadata_summary.json
+    - workflow/scripts/python/docs/statistics_summary.json
+    - workflow/scripts/python/docs/significant_hits_summary.json
+    - workflow/scripts/python/docs/results_report_fields.json
+  doc_targets:
+    - 08_References.md
+    - 06_Discussion.md
+
+focus_areas:
+  - name: system_or_tissue_background
+    target_section: 08_References.md
+    subsection: System or Tissue Context
+    heading_level: 3
+    query_inputs:
+      - tissue_or_material
+      - organism_or_system
+      - platform
+  - name: condition_or_treatment_background
+    target_section: 08_References.md
+    subsection: Condition, Treatment, or Perturbation Context
+    heading_level: 3
+    query_inputs:
+      - primary_factor_name
+      - primary_factor_levels
+      - secondary_factor_name
+      - secondary_factor_levels
+      - biological_question
+  - name: project_specific_biology
+    target_section: 08_References.md
+    subsection: Project-Specific Biology
+    heading_level: 3
+    query_inputs:
+      - strongest_comparison
+      - weakest_comparison
+      - example_annotation_1
+      - example_annotation_2
+      - main_biological_question
+  - name: results_support
+    target_section: 06_Discussion.md
+    subsection: Supporting evidence
+    heading_level: 2
+    query_inputs:
+      - strongest_comparison
+      - weakest_comparison
+      - example_proteins_or_pathways
+      - primary_question_interpretation
+      - context_specific_interpretation
+  - name: local_topic_context
+    target_section: 08_References.md
+    subsection: Local Topic Context
+    heading_level: 3
+    suppress_if_empty: true
+    query_inputs:
+      - analysis_group_or_facility
+      - data_source_or_facility
+      - project_title
+
+policies:
+  live_research_required: true
+  allowed_source_domains:
+    - pubmed.ncbi.nlm.nih.gov
+    - pmc.ncbi.nlm.nih.gov
+    - ncbi.nlm.nih.gov
+    - biorxiv.org
+    - doi.org
+    - nature.com
+    - sciencedirect.com
+    - frontiersin.org
+  source_priority:
+    - primary literature
+    - high-quality reviews
+    - official repository or standards pages
+  requirements:
+    - add direct source links for every cited item
+    - keep methods references distinct from biological-context references
+    - do not overstate nominal p-value findings as validated discoveries
+    - if protein-level support is weak or indirect, label it as candidate literature support
+  insertion_rules:
+    - update only the research-oriented sections declared in this file
+    - preserve unresolved placeholders when no strong candidate is found
+    - keep candidate references concise and validation-friendly
+
+outputs:
+  literature_candidates_json: workflow/scripts/python/docs/literature_candidates.json
+  literature_candidates_schema: template/literature_candidates.schema.json
+  updated_docs:
+    - 08_References.md
+    - 06_Discussion.md

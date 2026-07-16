@@ -1,0 +1,140 @@
+version: 1
+
+inputs:
+  required_locations:
+    - workflow/00_raw_data/
+  expected_user_supplied_items:
+    - raw_data_file
+    - metadata_source_file_optional
+    - project_request_context_optional
+
+modes:
+  prepare:
+    phases:
+      - discover
+      - bootstrap
+      - prepare
+  run:
+    phases:
+      - discover
+      - bootstrap
+      - prepare
+      - execute
+  docs:
+    phases:
+      - discover
+      - extract
+      - document
+      - validate
+  research:
+    phases:
+      - discover
+      - research_ready
+      - research
+      - validate
+  full:
+    phases:
+      - discover
+      - bootstrap
+      - prepare
+      - execute
+      - extract
+      - document
+      - validate
+
+phases:
+  discover:
+    description: Confirm contract files and input locations.
+    actions:
+      - read: template/workflow.yaml
+      - read: template/variables.yaml
+      - read: template/variable_sources.yaml
+      - read: template/docs_map.yaml
+      - read: template/validation.yaml
+      - verify_exists: workflow/00_raw_data/
+
+  bootstrap:
+    description: Create the declared local workflow environment before setup or execution.
+    actions:
+      - bootstrap_environment:
+          venv_dir: .venv
+          requirements_file: requirements.txt
+          system_prerequisites:
+            - python3-pip
+            - python3.12-venv
+
+  prepare:
+    description: Create and review startup files declared by this template.
+    actions:
+      - run_helper:
+          script: workflow/scripts/python/config_gen.py
+          args:
+            - --project-root
+            - .
+            - --force
+      - review_file: workflow/00_raw_data/config/project_manifest.yaml
+      - run_helper:
+          script: workflow/scripts/python/metadata_gen.py
+          args:
+            - --manifest
+            - workflow/00_raw_data/config/project_manifest.yaml
+            - --force
+      - review_file: workflow/00_raw_data/config/sample_metadata.csv
+      - review_file: workflow/00_raw_data/config/comparisons.csv
+      - run_helper_optional:
+          script: workflow/scripts/python/infer_astral_mode.py
+
+  execute:
+    description: Run the primary workflow entrypoint declared by the template.
+    actions:
+      - execute_notebook:
+          path: workflow/scripts/notebooks/proteomics_analysis.ipynb
+          timeout_seconds: -1
+
+  extract:
+    description: Generate structured documentation helpers from workflow outputs.
+    actions:
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_project_context.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_metadata_summary.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_statistics_summary.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_visualization_inventory.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_significant_hits.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_run_summary.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_results_report_fields.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_execution_report_fields.py
+
+  document:
+    description: Populate docs from resolved variables and generated outputs.
+    actions:
+      - validate_tokens: skills/workflow-executor/scripts/template_variables.py
+      - apply_tokens: skills/workflow-executor/scripts/template_variables.py
+
+  validate:
+    description: Confirm required outputs and report unresolved values.
+    actions:
+      - validate_contract: template/validation.yaml
+
+  research_ready:
+    description: Confirm that workflow execution and documentation are complete enough for literature augmentation.
+    actions:
+      - read: template/research.yaml
+      - verify_exists: workflow/final_report/README.md
+      - verify_exists: workflow/scripts/python/docs/project_context.json
+      - verify_exists: workflow/scripts/python/docs/results_report_fields.json
+      - verify_exists: workflow/scripts/python/docs/run_summary.json
+
+  research:
+    description: Perform project-specific literature augmentation using the declared research plan.
+    actions:
+      - perform_research:
+          path: template/research.yaml
+      - apply_research_updates:
+          path: template/research.yaml
