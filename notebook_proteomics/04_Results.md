@@ -94,7 +94,7 @@ Keep the figure-browser structure consistent across projects.
 
 - Use one `<details>` block per enabled comparison.
 - Add a nested `Samples` block and a nested `Significant proteins` block.
-- Keep the significant-protein table unique by accession and include `FoldChange`, `Significant`, and `Description`.
+- Keep the significant-protein table unique by accession and include both `Gene` and `Accession`, plus `FoldChange`, `Significant`, and `Description`.
 - Embed the main static figures below the tables in this order: volcano, heatmap, PCA panels, PLS-DA.
 - If no q-value-significant proteins are present, keep q-value plots unembedded and explain that once above the comparison blocks.
 -->
@@ -110,9 +110,9 @@ Keep the figure-browser structure consistent across projects.
 
 <details style="margin-left: 20px;"><summary>Significant proteins: p-value = {{ comparison_1_p_hits }} | q-value = {{ comparison_1_q_hits }}</summary>
 
-| Accession | FoldChange | Significant | Description |
-|---|---|---|---|
-| `{{ comparison_1_example_accession }}` | `{{ comparison_1_example_fold_change }}` | `{{ comparison_1_example_significant }}` | `{{ comparison_1_example_description }}` |
+| Gene | Accession | FoldChange | Significant | Description |
+|---|---|---|---|---|
+| `{{ comparison_1_example_gene }}` | `{{ comparison_1_example_accession }}` | `{{ comparison_1_example_fold_change }}` | `{{ comparison_1_example_significant }}` | `{{ comparison_1_example_description }}` |
 
 </details>
 
