@@ -128,6 +128,7 @@ def main() -> None:
         example_hits = stat.get("example_hits", [])
         if example_hits:
             example = example_hits[0]
+            payload[f"comparison_{idx}_example_gene"] = example.get("gene_symbol", "")
             payload[f"comparison_{idx}_example_accession"] = example.get("accession", "")
             payload[f"comparison_{idx}_example_description"] = example.get("description", "")
             payload[f"comparison_{idx}_example_fold_change"] = example.get("fold_change", "")

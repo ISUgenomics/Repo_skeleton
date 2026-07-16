@@ -38,6 +38,7 @@ def summarize_comparison(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_l
         if abs(log2fc) <= abs_log2fc_cutoff:
             continue
         accession = row.get("") or row.get("Accession") or row.get("Feature") or ""
+        gene_symbol = row.get("Gene Symbol") or row.get("GeneSymbol") or row.get("Feature") or accession
         description = row.get("Description", "")
         if p_value < p_cutoff:
             if log2fc > 0:
@@ -47,6 +48,7 @@ def summarize_comparison(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_l
             if len(example_hits) < 5:
                 example_hits.append(
                     {
+                        "gene_symbol": gene_symbol,
                         "accession": accession,
                         "description": description,
                         "fold_change": "positive" if log2fc > 0 else "negative",

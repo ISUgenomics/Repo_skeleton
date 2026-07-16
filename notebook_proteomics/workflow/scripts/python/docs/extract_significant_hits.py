@@ -41,6 +41,7 @@ def read_hits(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_log2fc_cutof
         reader = csv.DictReader(handle)
         for row in reader:
             accession = row.get("") or row.get("Accession") or row.get("Feature") or ""
+            gene_symbol = row.get("Gene Symbol") or row.get("GeneSymbol") or row.get("Feature") or accession
             description = row.get("Description", "")
             try:
                 p_value = float(row["p-value_StudentTtest"])
@@ -51,6 +52,7 @@ def read_hits(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_log2fc_cutof
 
             hit = {
                 "accession": accession,
+                "gene_symbol": gene_symbol,
                 "description": description,
                 "p_value": p_value,
                 "q_value": q_value,
@@ -63,6 +65,7 @@ def read_hits(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_log2fc_cutof
                     accession,
                     {
                         "accession": accession,
+                        "gene_symbol": gene_symbol,
                         "description": description,
                         "direction": hit["direction"],
                         "evidence": [],
@@ -77,6 +80,7 @@ def read_hits(csv_path: Path, p_cutoff: float, q_cutoff: float, abs_log2fc_cutof
                     accession,
                     {
                         "accession": accession,
+                        "gene_symbol": gene_symbol,
                         "description": description,
                         "direction": hit["direction"],
                         "evidence": [],
