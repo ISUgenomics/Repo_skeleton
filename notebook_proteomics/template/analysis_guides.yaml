@@ -42,6 +42,12 @@ helpers:
 docs:
   execution_vs_narrative:
     - workflow docs should record execution facts, checks, outputs, and troubleshooting notes
+    - workflow/execution_log.md is a generated run log, not a token-filled template document
+    - workflow/execution_log.md should record the actual execution path in a compact, human-readable way, including major steps, important decisions, deviations from the default code path, and any extra commands run outside the normal notebook flow
+    - execution_log entries should prefer short tables, bullets, and `<details>` blocks over long prose
+    - execution_log should record only material actions or decisions; do not copy raw terminal noise
+    - when exact commands are available, record them exactly and in order
+    - when a decision was made without an external command, record the decision and reason briefly
     - root docs should summarize study context, methods, results, and manuscript support
   results:
     - statistical conclusions should be derived primarily from workflow/02_statistics outputs

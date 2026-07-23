@@ -9,7 +9,7 @@ dependencies:
   - statsmodels
   - scikit-learn
   - plotly>=6.1
-  - python-kaleido>=1.0
+  - python-kaleido=0.2.1
   - seaborn
   - matplotlib
   - tqdm

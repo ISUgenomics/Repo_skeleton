@@ -4,7 +4,7 @@ Editor notes:
 -->
 # config
 
-Project startup files stored in `config/`.
+Project startup files stored in [workflow/00_raw_data/config/](./).
 
 ## Contents
 

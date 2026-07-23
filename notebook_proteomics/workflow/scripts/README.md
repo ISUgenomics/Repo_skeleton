@@ -7,7 +7,7 @@ Editor notes:
 
 Scripts used in the proteomics workflow.
 
-The current shared codebase includes reusable Python and R scripts, executed directly or via jupyter notebook.
+The current shared codebase includes reusable Python and R scripts, executed directly or via Jupyter notebook.
 
 ## Execution Order
 
