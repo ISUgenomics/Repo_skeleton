@@ -54,9 +54,23 @@ def comparison_inventory(output_root: Path, comparison_id: str) -> dict:
     }
 
     files_present = {key: present(path) for key, path in expected.items()}
+    html_count = sum(1 for key, is_present in files_present.items() if key.endswith("_html") and is_present)
+    png_count = sum(1 for key, is_present in files_present.items() if key.endswith("_png") and is_present)
+    svg_count = sum(1 for key, is_present in files_present.items() if key.endswith("_svg") and is_present)
     return {
         "comparison_id": comparison_id,
         "files_present": files_present,
+        "counts": {
+            "html": html_count,
+            "png": png_count,
+            "svg": svg_count,
+        },
+        "static_export_status": (
+            "missing_all_exports" if html_count == 0 and png_count == 0 and svg_count == 0
+            else "complete" if png_count > 0 and svg_count > 0
+            else "missing_static_exports" if html_count > 0 and png_count == 0 and svg_count == 0
+            else "partial"
+        ),
     }
 
 
@@ -80,6 +94,10 @@ def main() -> None:
             "pca_plots_generated": sum(1 for item in comparisons.values() if item["files_present"].get("pca_pc1_pc2_png")),
             "pca_3d_plots_generated": sum(1 for item in comparisons.values() if item["files_present"].get("pca_3d_html")),
             "plsda_plots_generated": sum(1 for item in comparisons.values() if item["files_present"].get("plsda_png")),
+            "html_exports_present": sum(item["counts"]["html"] for item in comparisons.values()),
+            "png_exports_present": sum(item["counts"]["png"] for item in comparisons.values()),
+            "svg_exports_present": sum(item["counts"]["svg"] for item in comparisons.values()),
+            "static_export_issue_count": sum(1 for item in comparisons.values() if item.get("static_export_status") != "complete"),
         },
     }
 

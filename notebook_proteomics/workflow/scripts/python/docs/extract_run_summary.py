@@ -43,6 +43,13 @@ def main() -> None:
     visualization_summary = read_json(Path(args.visualization_summary).resolve()) or {}
     software_versions = parse_versions(Path(args.software_versions).resolve())
     output_dir = Path(args.output_dir).resolve()
+    viz_aggregate = visualization_summary.get("aggregate", {})
+    html_exports = int(viz_aggregate.get("html_exports_present", 0) or 0)
+    png_exports = int(viz_aggregate.get("png_exports_present", 0) or 0)
+    svg_exports = int(viz_aggregate.get("svg_exports_present", 0) or 0)
+    comparison_count = int(visualization_summary.get("comparison_count", 0) or 0)
+    plot_outputs_missing = comparison_count > 0 and html_exports == 0 and png_exports == 0 and svg_exports == 0
+    static_missing = html_exports > 0 and png_exports == 0 and svg_exports == 0
 
     payload = {
         "project": manifest.get("project", {}),
@@ -52,9 +59,11 @@ def main() -> None:
         "statistics_summary": statistics_summary,
         "visualization_summary": visualization_summary,
         "software_versions": software_versions,
-        "final_run_status": "complete"
-        if metadata_summary and statistics_summary and visualization_summary
-        else "partial",
+        "final_run_status": (
+            "failed" if plot_outputs_missing else
+            "complete_with_warnings" if static_missing else
+            "complete"
+        ) if metadata_summary and statistics_summary and visualization_summary else "partial",
     }
 
     write_json(output_dir / "run_summary.json", payload)

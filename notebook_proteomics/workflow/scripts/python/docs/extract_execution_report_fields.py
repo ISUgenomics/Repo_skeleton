@@ -24,6 +24,14 @@ def join_names(paths: list[str]) -> str:
     return ", ".join(paths)
 
 
+def markdown_link(path: str) -> str:
+    rel = str(path or "").strip()
+    if not rel:
+        return ""
+    name = Path(rel).name
+    return f"[{name}](./{name})"
+
+
 def truth_text(value: bool) -> str:
     return "yes" if value else "no"
 
@@ -38,6 +46,21 @@ def list_present_files(files_present: dict, suffix: str) -> str:
     return ", ".join(names)
 
 
+def list_present_files_for_family(comparisons: dict, family_prefixes: list[str]) -> str:
+    names = []
+    for item in comparisons.values():
+        for file_name, present in sorted(item.get("files_present", {}).items()):
+            if present and any(file_name.startswith(prefix) for prefix in family_prefixes):
+                names.append(file_name)
+    return ", ".join(sorted(set(names)))
+
+
+def build_generated_comparisons_markdown(comparison_ids: list[str]) -> str:
+    if not comparison_ids:
+        return "- none"
+    return "\n".join(f"- `{comparison_id}`" for comparison_id in comparison_ids)
+
+
 def main() -> None:
     args = parse_args()
     project_context = read_json(Path(args.project_context).resolve()) or {}
@@ -49,7 +72,18 @@ def main() -> None:
 
     raw_data_file = run_summary.get("inputs", {}).get("raw_data_file", "")
     metadata_source = run_summary.get("inputs", {}).get("metadata_source", "")
-    received_files = [value for value in [raw_data_file, metadata_source, "workflow/00_raw_data/correspondence.txt"] if value]
+    raw_name = Path(raw_data_file).name if raw_data_file else ""
+    metadata_name = Path(metadata_source).name if metadata_source else ""
+    context_file = Path("workflow/00_raw_data/context.txt")
+    correspondence_file = Path("workflow/00_raw_data/correspondence.txt")
+    extra_text = context_file if context_file.exists() else correspondence_file if correspondence_file.exists() else None
+    received_files = [
+        value for value in [
+            markdown_link(raw_data_file),
+            markdown_link(metadata_source),
+            markdown_link(str(extra_text)) if extra_text else "",
+        ] if value
+    ]
     comparison_ids = [comp.get("comparison_id", "") for comp in metadata.get("comparisons", []) if comp.get("comparison_id", "")]
     grouping_columns = sorted({comp.get("grouping_column", "") for comp in metadata.get("comparisons", []) if comp.get("grouping_column", "")})
 
@@ -60,10 +94,57 @@ def main() -> None:
         for name, present in item.get("files_present", {}).items():
             files_present[name] = files_present.get(name, False) or bool(present)
 
+    html_exports = int(aggregate.get("html_exports_present", 0) or 0)
+    png_exports = int(aggregate.get("png_exports_present", 0) or 0)
+    svg_exports = int(aggregate.get("svg_exports_present", 0) or 0)
+    plot_outputs_missing = html_exports == 0 and png_exports == 0 and svg_exports == 0 and bool(comparisons)
+    static_missing = html_exports > 0 and png_exports == 0 and svg_exports == 0
+    visualization_status = "failed" if plot_outputs_missing else "warning" if static_missing else "completed"
+    final_run_status = (
+        "failed"
+        if plot_outputs_missing else
+        "complete_with_warnings" if static_missing else
+        run_summary.get("final_run_status", "complete")
+    )
+    issue_or_none = (
+        "no visualization outputs were generated"
+        if plot_outputs_missing else
+        "static visualization exports were not generated" if static_missing else
+        "none reported"
+    )
+    issue_resolution = (
+        "inspect plotting execution and rerun visualization generation"
+        if plot_outputs_missing else
+        "install or repair static-export dependencies and rerun visualization generation"
+        if static_missing else
+        "not applicable"
+    )
+    issue_impact = (
+        "no HTML, PNG, or SVG plots were generated for the requested comparisons"
+        if plot_outputs_missing else
+        "interactive HTML plots were generated, but PNG/SVG figure outputs were missing"
+        if static_missing else
+        "no documented impact on the completed run"
+    )
+    visualization_step_note = (
+        "No visualization outputs were generated for the requested comparisons."
+        if plot_outputs_missing else
+        "Interactive plot outputs were generated for all enabled comparisons, but PNG/SVG static exports were missing."
+        if static_missing else
+        "Interactive and static plot outputs were generated for all enabled comparisons."
+    )
+    plot_generation_status_note = (
+        "No visualization outputs were generated for the requested comparisons."
+        if plot_outputs_missing else
+        "Interactive HTML plots were generated for all enabled comparisons, but static PNG and SVG exports were missing."
+        if static_missing else
+        "Interactive HTML plots and static PNG/SVG exports were generated for all enabled comparisons."
+    )
+
     payload = {
         "received_files": join_names(received_files),
-        "main_input_file": raw_data_file,
-        "final_analysis_input": raw_data_file,
+        "main_input_file": raw_name,
+        "final_analysis_input": raw_name,
         "cleaned_export_used": "no separate cleaned export was documented",
         "provided_or_after_preprocessing": "as provided",
         "hidden_rows_present": "not documented",
@@ -90,36 +171,44 @@ def main() -> None:
         "normalization_note": f"Primary normalization was {run_summary.get('analysis', {}).get('normalization_primary', '')}.",
         "carry_forward_note_for_statistics": "The normalized matrix and validated sample metadata were carried into per-comparison statistical testing.",
         "grouping_columns_used": ", ".join(grouping_columns),
+        "generated_comparisons_md": build_generated_comparisons_markdown(comparison_ids),
         "comparison_deviations": "none",
         "statistical_method_changes": "none documented",
         "statistics_status": "completed",
         "carry_forward_statistics_note": f"The strongest nominal comparison was {stats.get('strongest_nominal_comparison', '')}; no q-value-supported proteins were retained.",
-        "visualization_status": "completed",
-        "plot_generation_status_note": "Interactive HTML plots were generated for all enabled comparisons; static PNG and SVG export depends on the local Plotly/Kaleido browser setup.",
-        "volcano_files_present_list": list_present_files(files_present, "_html") or "HTML outputs present",
-        "heatmap_files_present_list": list_present_files(files_present, "_html") or "HTML outputs present",
-        "pca_files_present_list": list_present_files(files_present, "_html") or "HTML outputs present",
-        "pca3d_files_present_list": list_present_files(files_present, "_html") or "HTML outputs present",
-        "plsda_files_present_list": list_present_files(files_present, "_html") or "HTML outputs present",
+        "visualization_status": visualization_status,
+        "plot_generation_status_note": plot_generation_status_note,
+        "volcano_files_present_list": list_present_files_for_family(comparisons, ["volcano_"]) or "none",
+        "heatmap_files_present_list": list_present_files_for_family(comparisons, ["heatmap_"]) or "none",
+        "pca_files_present_list": list_present_files_for_family(comparisons, ["pca_pc"]) or "none",
+        "pca3d_files_present_list": list_present_files_for_family(comparisons, ["pca_3d"]) or "none",
+        "plsda_files_present_list": list_present_files_for_family(comparisons, ["plsda"]) or "none",
         "no_secondary_analyses_or_replace": "No secondary analyses were performed for this run.",
         "raw_data_step_status": "completed",
-        "raw_data_primary_output": raw_data_file,
+        "raw_data_primary_output": raw_name,
         "raw_data_step_note": "Raw data, metadata source, and project correspondence were staged in workflow/00_raw_data/ and the startup config files were regenerated from the template.",
         "qc_step_status": "completed",
         "qc_step_note": "Filtering, metadata validation, and primary normalization completed successfully.",
         "statistics_step_status": "completed",
         "statistics_step_note": f"{len(comparison_ids)} enabled comparisons were tested and summarized in significant_protein_counts.csv.",
-        "visualization_step_status": "completed",
-        "visualization_step_note": "Interactive plot outputs were generated for all enabled comparisons.",
+        "visualization_step_status": visualization_status,
+        "visualization_step_note": visualization_step_note,
         "secondary_step_status": "not_run",
         "secondary_primary_output_or_none": "none",
         "secondary_step_note": "No follow-up secondary analyses were executed.",
-        "issue_or_none": "none reported",
-        "issue_resolution": "not applicable",
-        "issue_impact": "no documented impact on the completed run",
+        "issue_or_none": issue_or_none,
+        "issue_resolution": issue_resolution,
+        "issue_impact": issue_impact,
         "carry_forward_note_1": f"Only the {len(comparison_ids)} requested comparisons were enabled for this run.",
         "carry_forward_note_2": "No q-value-significant proteins were retained in the completed run.",
-        "carry_forward_note_3": "Static plot export availability depends on the local browser setup used by Plotly and Kaleido.",
+        "carry_forward_note_3": (
+            "No visualization outputs were generated in this run; inspect plotting execution before downstream manuscript use."
+            if plot_outputs_missing else
+            "Static PNG/SVG exports were missing in this run; inspect static-export dependencies before downstream manuscript use."
+            if static_missing else
+            "Static plot exports were generated and are available for downstream manuscript use."
+        ),
+        "final_run_status": final_run_status,
     }
 
     write_json(output_dir / "execution_report_fields.json", payload)

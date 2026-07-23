@@ -27,6 +27,11 @@ def parse_args() -> argparse.Namespace:
         default="workflow/scripts/python/docs",
         help="Directory where summary files should be written.",
     )
+    parser.add_argument(
+        "--comparisons-file",
+        default="workflow/00_raw_data/config/comparisons.csv",
+        help="Comparison definition file used to restrict summaries to enabled comparisons.",
+    )
     parser.add_argument("--p-cutoff", type=float, default=0.05)
     parser.add_argument("--q-cutoff", type=float, default=0.05)
     parser.add_argument("--abs-log2fc-cutoff", type=float, default=1.0)
@@ -108,11 +113,24 @@ def main() -> None:
     args = parse_args()
     input_dir = Path(args.input_dir).resolve()
     output_dir = Path(args.output_dir).resolve()
+    comparisons_file = Path(args.comparisons_file).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    enabled_ids = set()
+    with comparisons_file.open(newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            if str(row.get("enabled", "")).strip().upper() != "TRUE":
+                continue
+            comparison_id = row.get("comparison_id", "").strip()
+            if comparison_id:
+                enabled_ids.add(comparison_id)
 
     summary = {}
     for csv_path in sorted(input_dir.glob("*_comparison.csv")):
         comparison_id = csv_path.name.removesuffix("_comparison.csv")
+        if enabled_ids and comparison_id not in enabled_ids:
+            continue
         summary[comparison_id] = read_hits(
             csv_path=csv_path,
             p_cutoff=args.p_cutoff,

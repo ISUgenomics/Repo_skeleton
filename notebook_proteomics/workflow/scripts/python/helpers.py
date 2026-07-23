@@ -342,6 +342,14 @@ def configure_plotly_browser_env():
     if current:
         return current
 
+    for candidate in [
+        '/workspace/envs/chrome/chrome-linux64/chrome',
+        '/workspace/envs/chrome/chrome',
+    ]:
+        if Path(candidate).exists():
+            os.environ['BROWSER_PATH'] = candidate
+            return candidate
+
     for name in ['google-chrome', 'google-chrome-stable', 'chromium', 'chrome', 'msedge']:
         path = shutil.which(name)
         if path:
