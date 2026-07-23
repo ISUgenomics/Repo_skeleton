@@ -14,7 +14,7 @@ main notebook run completed: `{{ final_run_status }}`
 
 | Status | Step | Description | Primary output | Notes |
 |---|---|---|---|---|
-| `{{ raw_data_step_status }}` | [00_raw_data](../00_raw_data/README.md) | primary raw data file validation | `{{ raw_data_primary_output }}` | `{{ raw_data_step_note }}` |
+| `{{ raw_data_step_status }}` | [00_raw_data](../00_raw_data/README.md) | primary raw data file validation | [{{ raw_data_primary_output }}](../00_raw_data/{{ raw_data_primary_output }}) | `{{ raw_data_step_note }}` |
 | `{{ qc_step_status }}` | [01_qc_normalization](../01_qc_normalization/README.md) | filtering, metadata alignment, and primary normalization | [normalized_abundance_matrix.csv](../01_qc_normalization/normalized_abundance_matrix.csv) | `{{ qc_step_note }}` |
 | `{{ statistics_step_status }}` | [02_statistics](../02_statistics/README.md) | comparison-level statistical testing and hit counting | [significant_protein_counts.csv](../02_statistics/significant_protein_counts.csv) | `{{ statistics_step_note }}` |
 | `{{ visualization_step_status }}` | [03_visualization](../03_visualization/README.md) | figure generation in static and interactive formats | [output/](../03_visualization/output/) | `{{ visualization_step_note }}` |
@@ -24,8 +24,8 @@ main notebook run completed: `{{ final_run_status }}`
 
 | Setting | Value |
 |---|---|
-| raw data file | [`{{ raw_data_file }}`](../00_raw_data/) |
-| metadata source | [`{{ metadata_source_file }}`](../00_raw_data/) |
+| raw data file | [`{{ raw_data_file }}`](../00_raw_data/{{ raw_data_file }}) |
+| metadata source | [`{{ metadata_source_file }}`](../00_raw_data/{{ metadata_source_file }}) |
 | sample metadata | [`workflow/00_raw_data/config/sample_metadata.csv`](../00_raw_data/config/sample_metadata.csv) |
 | comparisons file | [`workflow/00_raw_data/config/comparisons.csv`](../00_raw_data/config/comparisons.csv) |
 | samples retained | `{{ sample_count }}` |

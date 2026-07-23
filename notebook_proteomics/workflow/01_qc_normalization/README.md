@@ -13,7 +13,7 @@ Quality control and normalization summary.
 
 | File | Purpose |
 |------|---------|
-| [`../00_raw_data/{{ raw_data_file }}`](../00_raw_data/) | raw grouped-abundance matrix from [00_raw_data](../00_raw_data/README.md) |
+| [`../00_raw_data/{{ raw_data_file }}`](../00_raw_data/{{ raw_data_file }}) | raw grouped-abundance matrix from [00_raw_data](../00_raw_data/README.md) |
 | [`../00_raw_data/config/sample_metadata.csv`](../00_raw_data/config/sample_metadata.csv) | sample metadata and grouping |
 | [`../00_raw_data/config/project_manifest.yaml`](../00_raw_data/config/project_manifest.yaml) | project settings used for this step |
 

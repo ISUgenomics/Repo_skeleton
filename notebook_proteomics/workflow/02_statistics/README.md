@@ -22,9 +22,9 @@ Input files used for statistical testing:
 ## Comparison Summary
 
 Comparisons tested in this project:
-⬜ primary comparison set completed as defined in [`../00_raw_data/config/comparisons.csv`](../00_raw_data/config/comparisons.csv)
-⬜ one or more configured comparisons were skipped
-⬜ one or more additional comparisons were added during analysis
+- ⬜ primary comparison set completed as defined in [`../00_raw_data/config/comparisons.csv`](../00_raw_data/config/comparisons.csv)
+- ⬜ one or more configured comparisons were skipped
+- ⬜ one or more additional comparisons were added during analysis
 
 Statistical settings used in this step:
 
@@ -35,12 +35,7 @@ Statistical settings used in this step:
 | Multiple-testing correction method | `Benjamini-Hochberg FDR` |
 | Significance thresholds | `p < 0.05`, `q < 0.05`, `abs(log2FC) > 1` |
 
-| comparison_id | group1 | group2 | p-value cutoff | q-value cutoff | abs_log2fc cutoff | output file |
-|---------------|--------|--------|----------------|----------------|-------------------|-------------|
-| `{{ comparison_1_id }}` | `{{ comparison_1_group1 }}` | `{{ comparison_1_group2 }}` | `0.05` | `0.05` | `1` | [`CSV/{{ comparison_1_output_file }}`](./CSV/) |
-| `{{ comparison_2_id }}` | `{{ comparison_2_group1 }}` | `{{ comparison_2_group2 }}` | `0.05` | `0.05` | `1` | [`CSV/{{ comparison_2_output_file }}`](./CSV/) |
-| `{{ comparison_3_id }}` | `{{ comparison_3_group1 }}` | `{{ comparison_3_group2 }}` | `0.05` | `0.05` | `1` | [`CSV/{{ comparison_3_output_file }}`](./CSV/) |
-| `{{ comparison_4_id }}` | `{{ comparison_4_group1 }}` | `{{ comparison_4_group2 }}` | `0.05` | `0.05` | `1` | [`CSV/{{ comparison_4_output_file }}`](./CSV/) |
+{{ comparison_overview_table_md }}
 
 ## Execution
 
@@ -50,12 +45,7 @@ All enabled comparison tables were generated successfully. Summary hit counts ar
 
 ### Number of significantly DE proteins
 
-| Comparison | Proteins with significant pvalue | Proteins with significant qvalue |
-| -- | -- | -- |
-| `{{ comparison_1_label }}` | `{{ comparison_1_p_hits }}` | `{{ comparison_1_q_hits }}` |
-| `{{ comparison_2_label }}` | `{{ comparison_2_p_hits }}` | `{{ comparison_2_q_hits }}` |
-| `{{ comparison_3_label }}` | `{{ comparison_3_p_hits }}` | `{{ comparison_3_q_hits }}` |
-| `{{ comparison_4_label }}` | `{{ comparison_4_p_hits }}` | `{{ comparison_4_q_hits }}` |
+{{ significant_hit_count_table_md }}
 
 ## Output Files
 

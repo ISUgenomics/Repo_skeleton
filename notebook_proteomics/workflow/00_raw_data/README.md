@@ -14,7 +14,7 @@ Raw data and project intake record.
 
 | Item | Value |
 |------|-------|
-| Raw data file | `{{ raw_data_file }}` |
+| Raw data file | [{{ raw_data_file }}](./{{ raw_data_file }}) |
 | Original format | `{{ raw_data_format }}` |
 | Raw data location | `workflow/00_raw_data/` |
 | Project manifest used for this run | [`config/project_manifest.yaml`](./config/project_manifest.yaml) |
@@ -56,4 +56,4 @@ Commands or manual actions used during intake and preprocessing:
 
 ## Final File Passed to Analysis
 
-Final file passed to [01_qc_normalization](../01_qc_normalization/README.md): `{{ final_analysis_input }}`
+Final file passed to [01_qc_normalization](../01_qc_normalization/README.md): [{{ final_analysis_input }}](./{{ final_analysis_input }})
