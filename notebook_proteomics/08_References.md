@@ -126,6 +126,8 @@ What to avoid:
 - generic omics citations when the section needs system-specific biology
 - project-irrelevant examples carried over from a previous template use
 
+-->
+
 ### System or Tissue Context
 
 ⬜ `{{ system_or_tissue_reference_1 }}`
@@ -143,8 +145,6 @@ What to avoid:
 ⬜ `{{ project_specific_reference_1 }}`
 ⬜ `{{ project_specific_reference_2 }}`
 ⬜ `{{ project_specific_reference_3 }}`
-
--->
 
 ## Candidate References for Results or Discussion Framing
 

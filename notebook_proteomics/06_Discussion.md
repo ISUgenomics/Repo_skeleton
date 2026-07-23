@@ -24,6 +24,7 @@ This file is reserved for manuscript-style discussion text that interprets the c
 
 ## Manuscript-Style Summary
 
+<!-- example template
 The proteomic analysis showed that `{{ overall_result_pattern }}`. The strongest signal was observed for `{{ strongest_comparison }}`, whereas `{{ weakest_comparison }}` showed the smallest or least consistent response. This pattern suggests that `{{ high_level_interpretation }}`.
 
 For the primary biological question, `{{ primary_question_interpretation }}`. Example proteins with annotations potentially relevant to this question included `{{ example_proteins_or_pathways }}`, although these observations should be interpreted in the context of `{{ statistical_caution }}`.
@@ -31,3 +32,5 @@ For the primary biological question, `{{ primary_question_interpretation }}`. Ex
 For the secondary or context-specific contrasts, `{{ secondary_question_interpretation }}`. The comparison-level figures and extracted significant-protein lists suggest `{{ context_specific_interpretation }}`, while also indicating `{{ important_limit_or_alternative_explanation }}`.
 
 Overall, this dataset supports `{{ balanced_conclusion }}`. Follow-up work may include `{{ follow_up_direction }}`.
+
+-->

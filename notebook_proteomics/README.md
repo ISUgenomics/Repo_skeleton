@@ -19,7 +19,7 @@ Experimental design was:
 | `{{ primary_group_1 }}` | `{{ secondary_group_1 }}` |
 | `{{ primary_group_2 }}` | `{{ secondary_group_2 }}` |
 
-*`{{ primary_group_labels_note }}`*
+*{{ primary_group_labels_note }}*
 
 ## Biological Question
 
@@ -27,7 +27,7 @@ Experimental design was:
 
 ## Hypotheses
 
-**Whether `{{ primary_hypothesis }}`.**
+**Whether {{ primary_hypothesis }}.**
 
 *The proteomic evidence that would support or contextualize that biological effect, include:*
 - Whether `{{ secondary_hypothesis }}`.
@@ -36,12 +36,7 @@ Experimental design was:
 
 ## Expected Comparisons
 
-| Comparison | Interpretation | Group size |
-|---|---|---|
-| `{{ comparison_1 }}` | `{{ comparison_1_interpretation }}` | `{{ comparison_1_group_size }}` |
-| `{{ comparison_2 }}` | `{{ comparison_2_interpretation }}` | `{{ comparison_2_group_size }}` |
-| `{{ comparison_3 }}` | `{{ comparison_3_interpretation }}` | `{{ comparison_3_group_size }}` |
-| `{{ comparison_4 }}` | `{{ comparison_4_interpretation }}` | `{{ comparison_4_group_size }}` |
+{{ expected_comparisons_table_md }}
 
 ## Publication-Level Notes
 
@@ -58,11 +53,11 @@ The root numbered markdown files (`*.md`) record the project design, file invent
 
 ## Analysis Status
 
-⬜ Raw input data file validated: [{{ raw_data_file }}](./workflow/00_raw_data/)
-⬜ Metadata source file validated: [{{ metadata_source_file }}](./workflow/00_raw_data/)
-⬜ Final sample metadata file prepared: [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv)
-⬜ Final comparison file prepared: [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv)
-⬜ Main [notebook run](./workflow/scripts/notebooks/proteomics_analysis.ipynb) completed and outputs were written in [**workflow/**](./workflow/)
+⬜ Raw input data file validated: [{{ raw_data_file }}](./{{ raw_data_file }})<br>
+⬜ Metadata source file validated: [{{ metadata_source_file }}](./{{ metadata_source_file }})<br>
+⬜ Final sample metadata file prepared: [sample_metadata.csv](./workflow/00_raw_data/config/sample_metadata.csv)<br>
+⬜ Final comparison file prepared: [comparisons.csv](./workflow/00_raw_data/config/comparisons.csv)<br>
+⬜ Main [notebook run](./workflow/scripts/notebooks/proteomics_analysis.ipynb) completed and outputs were written in [**workflow/**](./workflow/)<br>
 
 Documentation from workflow execution: [**Final report**](./workflow/final_report/README.md)
 

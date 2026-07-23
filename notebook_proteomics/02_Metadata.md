@@ -20,12 +20,7 @@ This file summarizes the finalized design recorded in [sample_metadata.csv](./wo
 
 ### Sample Groups
 
-| Group | Sample IDs | Count |
-|---|---|---|
-| `{{ group_1 }}` | `{{ group_1_sample_ids }}` | `{{ group_1_count }}` |
-| `{{ group_2 }}` | `{{ group_2_sample_ids }}` | `{{ group_2_count }}` |
-| `{{ group_3 }}` | `{{ group_3_sample_ids }}` | `{{ group_3_count }}` |
-| `{{ group_4 }}` | `{{ group_4_sample_ids }}` | `{{ group_4_count }}` |
+{{ sample_groups_table_md }}
 
 ⬜ All [`n={{ sample_count }}`] samples intended for the main run are represented after metadata finalization.  
 
@@ -48,12 +43,7 @@ The workflow-executed sample table is [workflow/01_qc_normalization/sample_metad
 
 Only these requested comparisons should be computed. Other possible combinations implied by the design should remain disabled unless they were explicitly requested for the project.
 
-| comparison_id | grouping_column | group1 | group2 | cutoffs |
-|---|---|---|---|---|
-| `{{ comparison_1_id }}` | `{{ comparison_1_grouping_column }}` | `{{ comparison_1_group1 }}` | `{{ comparison_1_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
-| `{{ comparison_2_id }}` | `{{ comparison_2_grouping_column }}` | `{{ comparison_2_group1 }}` | `{{ comparison_2_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
-| `{{ comparison_3_id }}` | `{{ comparison_3_grouping_column }}` | `{{ comparison_3_group1 }}` | `{{ comparison_3_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
-| `{{ comparison_4_id }}` | `{{ comparison_4_grouping_column }}` | `{{ comparison_4_group1 }}` | `{{ comparison_4_group2 }}` | `p<0.05`, `q<0.05`, `abs(log2FC)>1` |
+{{ requested_comparisons_table_md }}
 
 ## Validation Status
 

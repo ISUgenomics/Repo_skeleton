@@ -10,8 +10,8 @@ This file inventories the main project inputs, configuration files, and output l
 
 | File | Role | Notes |
 |---|---|---|
-| [{{ raw_data_file }}](./workflow/00_raw_data/) | main raw data file | `{{ raw_data_notes }}` |
-| [{{ metadata_source_file }}](./workflow/00_raw_data/) | metadata source | `{{ metadata_source_notes }}` |
+| [{{ raw_data_file }}](./workflow/00_raw_data/{{ raw_data_file }}) | main raw data file | `{{ raw_data_notes }}` |
+| [{{ metadata_source_file }}](./workflow/00_raw_data/{{ metadata_source_file }}) | metadata source | `{{ metadata_source_notes }}` |
 
 ## Workflow Configuration
 

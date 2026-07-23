@@ -2,23 +2,12 @@
 
 This file records the project context, study scope, team, and key request details that define why the analysis was performed.
 
-- [Project Overview](#project-overview)
 - [Research Team](#research-team)
+- [Project Overview](#project-overview)
 - [Experimental Design](#experimental-design)
 - [Project Goals](#project-goals)
 - [Key Project Decisions](#key-project-decisions)
   - [Key Correspondence](#key-correspondence)
-
-## Project Overview
-
-This project evaluates whether `{{ main_biological_question }}` alters the `{{ tissue_or_material }}` proteome of `{{ organism_or_system }}`. The study uses `{{ platform }}` on `{{ sample_count }}` samples collected from `{{ tissue_or_material }}`.
-
-The experimental design is:
-
-- primary factor: `{{ primary_factor_name_and_levels }}`
-- secondary factor: `{{ secondary_factor_name_and_levels }}`
-- full groups: `{{ full_groups }}`
-- group size: `{{ group_size }}`
 
 ## Research Team
 
@@ -28,6 +17,10 @@ The experimental design is:
 - data analysis: `{{ analysis_group_or_facility }}`
   - analysis lead: `{{ analysis_lead }}`
   - project contact: `{{ project_contact }}`
+
+## Project Overview
+
+This project evaluates whether `{{ main_biological_question }}` alters the `{{ tissue_or_material }}` proteome of `{{ organism_or_system }}`. The study uses `{{ platform }}` on `{{ sample_count }}` samples collected from `{{ tissue_or_material }}`.
 
 ## Experimental Design
 
@@ -46,7 +39,10 @@ The experimental design is:
 | `{{ primary_group_1 }}` | `{{ secondary_group_1 }}` |
 | `{{ primary_group_2 }}` | `{{ secondary_group_2 }}` |
 
+- `{{ primary_factor_name_and_levels }}`
+- `{{ secondary_factor_name_and_levels }}`
 - `{{ design_note }}`
+- group size: `{{ group_size }}`
 
 The planned comparisons are summarized in [02_Metadata.md](./02_Metadata.md), and the executed workflow is described in [03_Methods.md](./03_Methods.md).
 
