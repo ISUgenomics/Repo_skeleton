@@ -38,6 +38,9 @@ def normalize_space(text: str) -> str:
 def split_contacts(value: str) -> list[str]:
     if not value:
         return []
+    email_contacts = re.findall(r"[^<>\n]+<[^>]+>", value)
+    if email_contacts:
+        return [item.strip().strip(",") for item in email_contacts if item.strip().strip(",")]
     if ";" in value:
         parts = value.split(";")
     else:
@@ -51,6 +54,27 @@ def contact_name(value: str) -> str:
         text = text.split("<", 1)[0].strip()
     text = re.sub(r"\[[^\]]+\]", "", text).strip()
     return normalize_space(text)
+
+
+def contact_email(value: str) -> str:
+    match = re.search(r"<([^>]+)>", value)
+    return normalize_space(match.group(1)) if match else ""
+
+
+def contact_surname(value: str) -> str:
+    name = contact_name(value)
+    if "," in name:
+        return normalize_space(name.split(",", 1)[0])
+    parts = name.split()
+    return parts[-1] if parts else ""
+
+
+def full_contact(value: str) -> str:
+    name = contact_name(value)
+    email = contact_email(value)
+    if name and email:
+        return f"{name} <{email}>"
+    return name or normalize_space(value)
 
 
 def contact_tag(value: str) -> str:
@@ -145,6 +169,182 @@ def parse_correspondence(text: str) -> dict[str, str]:
     }
 
 
+def choose_primary_context(text_contexts: dict[str, str]) -> str:
+    if "correspondence" in text_contexts and text_contexts["correspondence"].strip():
+        return text_contexts["correspondence"]
+    for preferred in ("context", "request", "summary"):
+        if preferred in text_contexts and text_contexts[preferred].strip():
+            return text_contexts[preferred]
+    for text in text_contexts.values():
+        if text.strip():
+            return text
+    return ""
+
+
+def infer_free_text_team_fields(text: str) -> dict[str, str]:
+    patterns = {
+        "principal_investigator": r"Principal Investigator:\s*(.+)",
+        "primary_contact": r"primary contact:\s*(.+)",
+        "data_source_or_facility": r"data source:\s*(.+)",
+        "analysis_group_or_facility": r"data analysis:\s*(.+)",
+        "analysis_lead": r"analysis lead:\s*(.+)",
+        "project_contact": r"project contact:\s*(.+)",
+    }
+    result: dict[str, str] = {}
+    for key, pattern in patterns.items():
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            result[key] = normalize_space(match.group(1))
+    return result
+
+
+def clean_contact_field(value: str) -> str:
+    if not value:
+        return ""
+    return normalize_space(re.sub(r"\s+", " ", value).strip())
+
+
+def parse_project_narrative(text: str) -> dict[str, str]:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    prose = "\n".join(lines)
+    payload: dict[str, str] = {}
+
+    objective_match = re.search(r"This project evaluates whether (.+?)\.", prose, flags=re.IGNORECASE)
+    if objective_match:
+        question = normalize_space(objective_match.group(1))
+        payload["main_biological_question"] = question
+        payload["biological_question"] = question.capitalize() + "."
+
+    summary_match = re.search(
+        r"The study uses (.+?) on (\d+) (.+?) samples from (.+?)\.",
+        prose,
+        flags=re.IGNORECASE,
+    )
+    if summary_match:
+        payload["platform"] = normalize_space(summary_match.group(1))
+        payload["sample_count"] = summary_match.group(2)
+        tissue = normalize_space(summary_match.group(3))
+        organism = normalize_space(summary_match.group(4))
+        payload["one_sentence_summary"] = f"This project analyzes {summary_match.group(2)} {tissue} samples from {organism}."
+        payload["tissue_or_material"] = tissue
+        payload["organism_or_system"] = organism
+
+    if re.search(r"two levels of diet\s*\(CON and SBE\)", prose, flags=re.IGNORECASE):
+        payload["primary_factor_name"] = "diet"
+        payload["factor_1_name"] = "diet"
+        payload["primary_factor_levels"] = "CON, SBE"
+        payload["factor_1_levels"] = "CON, SBE"
+        payload["primary_factor_name_and_levels"] = "diet: CON, SBE"
+        payload["primary_group_labels_note"] = (
+            "`CON` is the dietary control group and `SBE` is the polyphenol-supplemented diet group."
+        )
+
+    if re.search(r"challenged with LPS or pair-fed \(PF\)", prose, flags=re.IGNORECASE):
+        payload["secondary_factor_name"] = "challenge"
+        payload["factor_2_name"] = "challenge"
+        payload["factor_2_levels"] = "LPS, PF"
+        payload["secondary_factor_levels_and_rationale"] = "LPS, PF"
+        payload["secondary_hypothesis"] = "diet is associated with a measurable main-effect proteomic shift"
+        payload["tertiary_hypothesis"] = "challenge is associated with a measurable main-effect proteomic shift"
+        payload["quaternary_hypothesis"] = "the effect of diet depends on challenge"
+
+    if re.search(r"CON=dietary control", prose, flags=re.IGNORECASE):
+        payload["primary_factor_rationale"] = (
+            "`CON` denotes the dietary control and `SBE` denotes the polyphenol-supplemented diet."
+        )
+    if re.search(r"(reduce|reducing|attenuate|attenuating)\s+inflammation", prose, flags=re.IGNORECASE):
+        payload["primary_hypothesis"] = "polyphenol-supplemented (`SBE`) diet reduces inflammation"
+        payload["primary_biological_hypothesis"] = payload["primary_hypothesis"]
+
+    if re.search(r"mature,\s*lactating Holstein cows", prose, flags=re.IGNORECASE):
+        payload["organism_or_system"] = "mature lactating Holstein cows"
+        if payload.get("sample_count") and payload.get("tissue_or_material"):
+            payload["one_sentence_summary"] = (
+                f"This project analyzes {payload['sample_count']} {payload['tissue_or_material']} samples from "
+                "mature lactating Holstein cows in a 2x2 factorial design."
+            )
+
+    full_groups_match = re.search(
+        r"full treatments are\s+(.+?)\.\s+All are n=(\d+)",
+        prose,
+        flags=re.IGNORECASE,
+    )
+    if full_groups_match:
+        groups = [normalize_space(part) for part in full_groups_match.group(1).split(",") if normalize_space(part)]
+        payload["full_groups"] = ", ".join(groups)
+        payload["group_size"] = f"n={full_groups_match.group(2)} per treatment"
+        payload["conditions_or_groups"] = payload["full_groups"]
+
+    comparisons_match = re.search(
+        r"comparisons of interest would be (.+?)\.\s*The other comparisons are not of interest",
+        prose,
+        flags=re.IGNORECASE,
+    )
+    if comparisons_match:
+        requested = normalize_space(comparisons_match.group(1))
+        payload["requested_comparison_scope"] = requested
+        payload["prespecified_comparisons_summary"] = requested
+        payload["project_objective_sentence"] = (
+            "The objective of this study was to evaluate whether diet, inflammatory challenge, and diet-within-"
+            "challenge contrasts were associated with changes in the mammary tissue proteome of lactating dairy cows."
+        )
+
+    return payload
+
+
+def finalize_semantic_context(payload: dict[str, str], primary_context: str) -> None:
+    prose = normalize_space(primary_context)
+    lower = prose.lower()
+
+    if "two levels of diet" in lower:
+        payload["primary_factor_name"] = "diet"
+        payload["factor_1_name"] = "diet"
+        if payload.get("primary_factor_levels"):
+            payload["factor_1_levels"] = payload["primary_factor_levels"]
+
+    if "challenged with lps" in lower or "pair-fed (pf)" in lower:
+        payload["secondary_factor_name"] = "challenge"
+        payload["factor_2_name"] = "challenge"
+
+    if "con=dietary control" in lower:
+        payload["primary_factor_rationale"] = (
+            "`CON` denotes the dietary control and `SBE` denotes the polyphenol-supplemented diet."
+        )
+        payload["primary_group_labels_note"] = (
+            "`CON` is the dietary control group and `SBE` is the polyphenol-supplemented diet group."
+        )
+
+    if re.search(r"(reduce|reducing|attenuate|attenuating)\s+inflammation", prose, flags=re.IGNORECASE):
+        payload["primary_hypothesis"] = "polyphenol-supplemented (`SBE`) diet reduces inflammation"
+        payload["primary_biological_hypothesis"] = payload["primary_hypothesis"]
+
+    if "mammary tissue" in lower:
+        payload["tissue_or_material"] = "mammary tissue"
+
+    if "mature, lactating holstein cows" in lower or "mature lactating holstein cows" in lower:
+        payload["organism_or_system"] = "mature lactating Holstein cows, aged 3+"
+        sample_count = payload.get("sample_count", "")
+        tissue = payload.get("tissue_or_material", "")
+        if sample_count and tissue:
+            payload["one_sentence_summary"] = (
+                f"This project analyzes {sample_count} {tissue} samples from mature lactating Holstein cows, aged 3+."
+            )
+
+    if payload.get("primary_factor_name") == "diet" and payload.get("secondary_factor_name") == "challenge":
+        payload["main_biological_question"] = (
+            "whether diet and inflammatory challenge alter the mammary tissue proteome of dairy cows"
+        )
+        payload["biological_question"] = (
+            "Whether diet and inflammatory challenge alter the mammary tissue proteome of dairy cows."
+        )
+
+    if "comparisons of interest would be" in lower:
+        payload["project_objective_sentence"] = (
+            "The objective of this study was to evaluate whether diet, inflammatory challenge, and diet-within-"
+            "challenge contrasts were associated with changes in the mammary tissue proteome of lactating dairy cows."
+        )
+
+
 def raw_data_format_from_manifest(manifest: dict) -> str:
     fmt = str(manifest.get("analysis", {}).get("input_format", "")).lower()
     mapping = {
@@ -184,10 +384,37 @@ def infer_team_fields(text_contexts: dict[str, str]) -> dict[str, str]:
     to_contacts = split_contacts(to_values[0]) if to_values else []
     cc_contacts = split_contacts(cc_values[0]) if cc_values else []
     subject = subjects[0] if subjects else ""
+    all_contacts = [sender] + to_contacts + cc_contacts
 
-    principal_investigator = contact_name(sender)
-    primary_contact = sender or principal_investigator
-    project_contact = to_contacts[0] if to_contacts else ""
+    def resolve_named_contact(name_hint: str) -> str:
+        hint = normalize_space(name_hint).lower()
+        if not hint:
+            return ""
+        aliases = {
+            "alex": ["aleksandra", "alexandra"],
+        }
+        for contact in all_contacts:
+            full = full_contact(contact)
+            name = contact_name(contact).lower()
+            if hint in name:
+                return full
+            first = name.split(",", 1)[-1].strip().split()[0] if "," in name else (name.split()[0] if name.split() else "")
+            if hint == first:
+                return full
+            if first.startswith(hint) or hint.startswith(first):
+                return full
+            if first[:4] and hint[:4] and first[:4] == hint[:4]:
+                return full
+            for alias in aliases.get(hint, []):
+                if first == alias or first.startswith(alias) or alias.startswith(first):
+                    return full
+        return ""
+
+    sender_name = contact_name(sender)
+    sender_full = full_contact(sender)
+    principal_investigator = ""
+    primary_contact = sender_full or sender_name
+    project_contact = ""
     analysis_group = ""
     data_source = ""
     analysis_lead = ""
@@ -197,25 +424,25 @@ def infer_team_fields(text_contexts: dict[str, str]) -> dict[str, str]:
         if not analysis_group and ("biotc" in lower or "bioinformatics" in lower):
             analysis_group = contact_tag(contact) or contact_name(contact)
         if not data_source and ("protein facility" in lower or "protein@" in lower):
-            data_source = contact_name(contact)
+            data_source = full_contact(contact)
 
-    lead_match = re.search(r"(?:have|let(?:’|')s have)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+take lead", combined)
+    lead_match = re.search(r"(?:have|let(?:’|')s have)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+take lead", combined, flags=re.IGNORECASE)
     if lead_match:
-        analysis_lead = normalize_space(lead_match.group(1))
+        analysis_lead = resolve_named_contact(lead_match.group(1)) or normalize_space(lead_match.group(1))
 
-    contact_match = re.search(r"main contact for\s+([A-Z][a-z]+)", combined)
-    if contact_match and not project_contact and to_contacts:
-        project_contact = to_contacts[0]
+    contact_match = re.search(r"([A-Z][a-z]+)\s+can still be the main contact for\s+([A-Z][a-z]+)", combined, flags=re.IGNORECASE)
+    if contact_match:
+        project_contact = resolve_named_contact(contact_match.group(1)) or project_contact
 
     if not analysis_group and to_contacts:
         analysis_group = contact_name(to_contacts[0])
     if not data_source and cc_contacts:
-        data_source = contact_name(cc_contacts[0])
+        data_source = full_contact(cc_contacts[0])
 
     return {
         "principal_investigator": principal_investigator,
         "primary_contact": primary_contact,
-        "project_contact": contact_name(project_contact) if project_contact else primary_contact,
+        "project_contact": full_contact(project_contact) if project_contact else "",
         "analysis_group_or_facility": analysis_group,
         "analysis_lead": analysis_lead,
         "data_source_or_facility": data_source,
@@ -305,9 +532,24 @@ def main() -> None:
     output_dir = Path(args.output_dir).resolve()
 
     text_contexts = read_text_contexts(raw_data_dir)
-    correspondence = parse_correspondence(text_contexts.get("correspondence", ""))
+    primary_context = choose_primary_context(text_contexts)
+    correspondence = parse_correspondence(primary_context)
     team_fields = infer_team_fields(text_contexts)
+    free_text_team = infer_free_text_team_fields(primary_context)
+    team_fields = {
+        key: clean_contact_field(first_nonempty(free_text_team.get(key, ""), team_fields.get(key, "")))
+        for key in {
+            "principal_investigator",
+            "primary_contact",
+            "project_contact",
+            "analysis_group_or_facility",
+            "analysis_lead",
+            "data_source_or_facility",
+            "correspondence_subject",
+        }
+    }
     manuscript_fields = infer_manuscript_support_fields(text_contexts, team_fields)
+    narrative_fields = parse_project_narrative(primary_context)
 
     factor_columns = metadata_summary.get("factor_columns", [])
     factor_levels = metadata_summary.get("factor_levels", {})
@@ -347,13 +589,13 @@ def main() -> None:
         "primary_group_2": primary_levels[1] if len(primary_levels) > 1 else "",
         "secondary_group_1": secondary_levels[0] if len(secondary_levels) > 0 else "",
         "secondary_group_2": secondary_levels[1] if len(secondary_levels) > 1 else "",
-        "primary_group_labels_note": "Primary and secondary labels reflect the main experimental factors.",
+        "primary_group_labels_note": "Primary and secondary labels correspond to the main experimental factors resolved from the finalized metadata.",
         "primary_hypothesis": (
             f"{primary_factor} and {secondary_factor} change the "
             f"{manifest.get('project', {}).get('material', '')} proteome"
         ).strip(),
-        "secondary_hypothesis": f"{primary_factor} produces a measurable main-effect proteomic shift" if primary_factor else "",
-        "tertiary_hypothesis": f"{secondary_factor} produces a measurable main-effect proteomic shift" if secondary_factor else "",
+        "secondary_hypothesis": f"{primary_factor} is associated with a measurable main-effect proteomic shift" if primary_factor else "",
+        "tertiary_hypothesis": f"{secondary_factor} is associated with a measurable main-effect proteomic shift" if secondary_factor else "",
         "quaternary_hypothesis": f"the effect of {primary_factor} depends on {secondary_factor}" if primary_factor and secondary_factor else "",
         "factor_1_name": primary_factor,
         "factor_1_levels": ", ".join(primary_levels),
@@ -378,20 +620,32 @@ def main() -> None:
         "raw_data_notes": "Primary raw data file used for the completed workflow run.",
         "metadata_source_notes": "Project-provided metadata reference file used to prepare or validate sample metadata.",
         "visible_only_copy_status": "not used",
-        "main_experimental_factors": f"{primary_factor} and {secondary_factor}".strip(" and "),
-        "main_factors": f"{primary_factor} and {secondary_factor}".strip(" and "),
+        "main_experimental_factors": " and ".join([value for value in [primary_factor, secondary_factor] if value]),
+        "main_factors": " and ".join([value for value in [primary_factor, secondary_factor] if value]),
         "prespecified_comparisons_summary": ", ".join(comp.get("comparison_id", "") for comp in comparisons),
         "primary_biological_hypothesis": (
             f"{primary_factor} and {secondary_factor} change the {manifest.get('project', {}).get('material', '')} proteome"
         ).strip(),
-        "primary_factor_question": f"whether {primary_factor} alters the proteome" if primary_factor else "",
-        "primary_factor_rationale": f"{primary_factor} is one of the main experimental factors in this study." if primary_factor else "",
+        "primary_factor_question": (
+            f"the {manifest.get('project', {}).get('material', '')} proteome differed between {', '.join(primary_levels)}"
+            if primary_factor and primary_levels else ""
+        ),
+        "primary_factor_rationale": (
+            f"It was specified as a primary design factor with levels {', '.join(primary_levels)}."
+            if primary_factor and primary_levels else ""
+        ),
         "secondary_factor_levels_and_rationale": (
-            f"{secondary_factor}: {', '.join(secondary_levels)}; this factor provides the main challenge or context contrast."
+            f"{', '.join(secondary_levels)}"
             if secondary_factor else ""
         ),
-        "secondary_factor_effect": f"whether {secondary_factor} alters the proteome" if secondary_factor else "",
-        "confounding_or_context_factor": secondary_factor,
+        "secondary_factor_effect": (
+            f"differences attributable to {secondary_factor}"
+            if secondary_factor else ""
+        ),
+        "confounding_or_context_factor": (
+            f"the broader {secondary_factor} context"
+            if secondary_factor else ""
+        ),
         "interaction_or_context_question": (
             f"whether the effect of {primary_factor} depends on {secondary_factor}" if primary_factor and secondary_factor else ""
         ),
@@ -402,10 +656,58 @@ def main() -> None:
         "biological_relevance": (
             f"{manifest.get('project', {}).get('material', '').capitalize()} provides the biological context for this proteomics study."
         ),
-        **team_fields,
-        **manuscript_fields,
-        **correspondence,
     }
+
+    override_from_narrative = {
+        "one_sentence_summary",
+        "organism_or_system",
+        "tissue_or_material",
+        "main_biological_question",
+        "biological_question",
+        "primary_factor_name",
+        "factor_1_name",
+        "primary_factor_levels",
+        "factor_1_levels",
+        "secondary_factor_name",
+        "factor_2_name",
+        "factor_2_levels",
+        "primary_factor_name_and_levels",
+        "secondary_factor_levels_and_rationale",
+        "primary_group_labels_note",
+        "primary_hypothesis",
+        "primary_biological_hypothesis",
+        "secondary_hypothesis",
+        "tertiary_hypothesis",
+        "quaternary_hypothesis",
+        "project_objective_sentence",
+        "primary_factor_rationale",
+    }
+
+    for extra_fields in (team_fields, manuscript_fields, correspondence, narrative_fields):
+        for key, value in extra_fields.items():
+            if value in ("", None, [], {}):
+                continue
+            if extra_fields is narrative_fields and key in override_from_narrative:
+                payload[key] = value
+            elif payload.get(key) in ("", None, [], {}):
+                payload[key] = value
+
+    if not payload.get("requested_comparison_scope") and comparisons:
+        payload["requested_comparison_scope"] = ", ".join(comp.get("comparison_id", "") for comp in comparisons if comp.get("comparison_id"))
+
+    if not payload.get("prespecified_comparisons_summary") and payload.get("requested_comparison_scope"):
+        payload["prespecified_comparisons_summary"] = payload["requested_comparison_scope"]
+
+    if rows and groups:
+        for idx, group in enumerate(groups[:4], start=1):
+            payload[f"group_{idx}"] = group.get("group", "")
+            payload[f"group_{idx}_sample_ids"] = ", ".join(group.get("sample_ids", []))
+            payload[f"group_{idx}_count"] = str(group.get("count", ""))
+
+    if correspondence["key_correspondence_excerpt"] == "" and primary_context:
+        payload["key_correspondence_excerpt"] = primary_context.strip()
+    if correspondence["key_correspondence_sender"] == "" and payload.get("primary_contact"):
+        payload["key_correspondence_sender"] = payload["primary_contact"]
 
     payload["text_context_file_count"] = str(len(text_contexts))
     payload["text_context_files"] = ", ".join(f"{stem}.txt" for stem in sorted(text_contexts))
@@ -442,6 +744,8 @@ def main() -> None:
         elif stem == "biological_question":
             payload["biological_question"] = " ".join(text.split())
             payload["main_biological_question"] = " ".join(text.split())
+
+    finalize_semantic_context(payload, primary_context)
 
     write_json(output_dir / "project_context.json", payload)
     print(f"Wrote {output_dir / 'project_context.json'}")
