@@ -7,10 +7,10 @@
 
 - [How to use this template](#how-to-use-this-template)
 
-The `notebook_proteomics/` template is a documentation-first scaffold for standardized proteomics analysis. It keeps the manuscript-supporting `.md` files at the project root and uses `workflow/` as the real execution workspace: live process notes, decision points, issues, intermediate outputs, and analysis results.
+The `notebook_proteomics_legacy/` template is a documentation-first scaffold for standardized proteomics analysis. It keeps the manuscript-supporting `.md` files at the project root and uses `workflow/` as the real execution workspace: live process notes, decision points, issues, intermediate outputs, and analysis results.
 
 ```bash
-notebook_proteomics/
+notebook_proteomics_legacy/
 ├── workflow/         # see steps 3 to 6 - analysis
 └── *.md              # see step 7 - documentation
 ```
@@ -33,16 +33,16 @@ workflow/
 
 *(Full Guide)*
 
-<details><summary>1. Copy <b>notebook_proteomics/</b> template into your project's repo.</summary>
+<details><summary>1. Copy <b>notebook_proteomics_legacy/</b> template into your project's repo.</summary>
 
 Create a new repository in the GitHub UI with a simple `README.md` that gives a one-sentence description of the project.
 
-Then clone it to your local machine and copy only the contents of `notebook_proteomics/` into that repository, not the parent folder itself.
+Then clone it to your local machine and copy only the contents of `notebook_proteomics_legacy/` into that repository, not the parent folder itself.
 
 ```bash
 git clone <your-github-repo-url>
 cd <your-repo-name>
-cp -R /path/to/notebook_proteomics/. .
+cp -R /path/to/notebook_proteomics_legacy/. .
 ```
 
 </details>

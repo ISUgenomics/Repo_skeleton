@@ -21,7 +21,7 @@ environment:
 
 tooling:
   skill_root: agent_skills/workflows_exe/workflow-executor
-  template_root: Repo_skeleton/notebook_proteomics
+  template_root: Repo_skeleton/notebook_proteomics_legacy
   template_source_repo: ISUgenomics/Repo_skeleton
   template_source_branch: master
   template_source_subdir: notebook_proteomics_legacy
