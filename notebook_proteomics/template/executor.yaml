@@ -20,27 +20,33 @@ modes:
       - bootstrap
       - prepare
       - execute
+      - validate_outputs
   docs:
     phases:
       - discover
       - extract
       - document
-      - validate
+      - validate_docs
+  validate:
+    phases:
+      - discover
+      - validate_outputs
   research:
     phases:
       - discover
       - research_ready
       - research
-      - validate
+      - validate_docs
   full:
     phases:
       - discover
       - bootstrap
       - prepare
       - execute
+      - validate_outputs
       - extract
       - document
-      - validate
+      - validate_docs
 
 phases:
   discover:
@@ -52,13 +58,13 @@ phases:
       - read: template/docs_map.yaml
       - read: template/validation.yaml
       - verify_exists: workflow/00_raw_data/
+      - note: create and maintain workflow/execution_log.md as a generated ordered run log from the first material action onward
 
   bootstrap:
     description: Create the declared local workflow environment before setup or execution.
     actions:
+      - note: record any environment or bootstrap commands actually run in workflow/execution_log.md
       - bootstrap_environment:
-          venv_dir: .venv
-          requirements_file: requirements.txt
           system_prerequisites:
             - python3-pip
             - python3.12-venv
@@ -66,6 +72,7 @@ phases:
   prepare:
     description: Create and review startup files declared by this template.
     actions:
+      - note: record setup helpers run, files regenerated, and any manual review decisions in workflow/execution_log.md
       - run_helper:
           script: workflow/scripts/python/config_gen.py
           args:
@@ -87,6 +94,7 @@ phases:
   execute:
     description: Run the primary workflow entrypoint declared by the template.
     actions:
+      - note: record the main execution entrypoint, retries, and any commands run outside the notebook in workflow/execution_log.md
       - execute_notebook:
           path: workflow/scripts/notebooks/proteomics_analysis.ipynb
           timeout_seconds: -1
@@ -94,10 +102,11 @@ phases:
   extract:
     description: Generate structured documentation helpers from workflow outputs.
     actions:
-      - run_helper_optional:
-          script: workflow/scripts/python/docs/extract_project_context.py
+      - note: record which helper scripts were run in workflow/execution_log.md
       - run_helper_optional:
           script: workflow/scripts/python/docs/extract_metadata_summary.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/extract_project_context.py
       - run_helper_optional:
           script: workflow/scripts/python/docs/extract_statistics_summary.py
       - run_helper_optional:
@@ -114,17 +123,33 @@ phases:
   document:
     description: Populate docs from resolved variables and generated outputs.
     actions:
-      - validate_tokens: skills/workflow-executor/scripts/template_variables.py
-      - apply_tokens: skills/workflow-executor/scripts/template_variables.py
+      - note: record material post-run documentation edits or non-default decisions in workflow/execution_log.md
+      - restore_contract_docs:
+          overwrite_existing: true
+          sections:
+            - root
+            - workflow
+      - validate_tokens: template_variables.py
+      - apply_tokens: template_variables.py
+      - run_helper_optional:
+          script: workflow/scripts/python/docs/apply_checklists.py
 
-  validate:
-    description: Confirm required outputs and report unresolved values.
+  validate_outputs:
+    description: Confirm required workflow outputs exist and pass basic sanity checks.
     actions:
-      - validate_contract: template/validation.yaml
+      - note: record output-validation failures or accepted output exceptions in workflow/execution_log.md
+      - validate_outputs: template/validation.yaml
+
+  validate_docs:
+    description: Confirm documentation state and unresolved values after doc generation.
+    actions:
+      - note: record documentation-validation failures or accepted unresolved items in workflow/execution_log.md
+      - validate_docs: template/validation.yaml
 
   research_ready:
     description: Confirm that workflow execution and documentation are complete enough for literature augmentation.
     actions:
+      - note: record the transition into research mode in workflow/execution_log.md
       - read: template/research.yaml
       - verify_exists: workflow/final_report/README.md
       - verify_exists: workflow/scripts/python/docs/project_context.json
@@ -134,7 +159,12 @@ phases:
   research:
     description: Perform project-specific literature augmentation using the declared research plan.
     actions:
+      - note: record literature-search steps that materially changed project docs in workflow/execution_log.md
       - perform_research:
           path: template/research.yaml
       - apply_research_updates:
           path: template/research.yaml
+      - run_helper:
+          script: workflow/scripts/python/docs/refine_results_observations.py
+      - run_helper:
+          script: workflow/scripts/python/docs/refine_introduction_narrative.py

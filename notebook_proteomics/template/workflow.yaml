@@ -1,4 +1,4 @@
-template_id: notebook_proteomics
+template_id: notebook_proteomics_legacy
 analysis_type: proteomics
 version: 1
 analysis_guides: template/analysis_guides.yaml
@@ -11,13 +11,20 @@ execution:
   executor_plan: template/executor.yaml
 
 environment:
-  venv_dir: .venv
+  venv_dir: envs/proteomics/.venv
   requirements_file: requirements.txt
-  python_bin: .venv/bin/python
-  pip_bin: .venv/bin/pip
+  python_bin: envs/proteomics/.venv/bin/python
+  pip_bin: envs/proteomics/.venv/bin/pip
   system_prerequisites:
     - python3-pip
     - python3.12-venv
+
+tooling:
+  skill_root: agent_skills/workflows_exe/workflow-executor
+  template_root: Repo_skeleton/notebook_proteomics
+  template_source_repo: ISUgenomics/Repo_skeleton
+  template_source_branch: master
+  template_source_subdir: notebook_proteomics_legacy
 
 setup:
   config_manifest: workflow/00_raw_data/config/project_manifest.yaml
@@ -40,6 +47,7 @@ helpers:
     - workflow/scripts/python/docs/extract_results_report_fields.py
     - workflow/scripts/python/docs/extract_execution_report_fields.py
     - workflow/scripts/python/docs/extract_significant_hits.py
+    - workflow/scripts/python/docs/apply_checklists.py
 
 scripts:
   execution_helpers:
@@ -59,8 +67,10 @@ scripts:
     - workflow/scripts/python/docs/extract_results_report_fields.py
     - workflow/scripts/python/docs/extract_execution_report_fields.py
     - workflow/scripts/python/docs/extract_significant_hits.py
+    - workflow/scripts/python/docs/apply_checklists.py
 
 outputs:
+  execution_log: workflow/execution_log.md
   raw_data_step: workflow/00_raw_data
   qc_step: workflow/01_qc_normalization
   statistics_step: workflow/02_statistics
@@ -78,9 +88,11 @@ docs:
     - 04_Results.md
     - 05_Introduction.md
     - 06_Discussion.md
+    - 07_Supplementary.md
     - 08_References.md
     - 09_AuthorInfo.md
   workflow:
+    - workflow/workflow.md
     - workflow/00_raw_data/README.md
     - workflow/01_qc_normalization/README.md
     - workflow/02_statistics/README.md

@@ -26,25 +26,31 @@ required_variables:
   - astral_mode
 
 required_outputs_after_run:
+  - workflow/execution_log.md
   - workflow/01_qc_normalization/normalized_abundance_matrix.csv
   - workflow/02_statistics/significant_protein_counts.csv
   - workflow/03_visualization/output
   - workflow/final_report/README.md
 
 optional_docs_with_unresolved_tokens:
+  - 06_Discussion.md
   - 08_References.md
   - 09_AuthorInfo.md
 
 optional_unresolved_tokens:
-  - comparison_1_volcano_png
-  - comparison_1_heatmap_png
-  - comparison_1_pca_pc1_pc2_png
-  - comparison_1_pca_pc1_pc3_png
-  - comparison_1_pca_pc2_pc3_png
-  - comparison_1_plsda_png
+  - principal_investigator
+  - analysis_lead
+  - project_contact
   - example_volcano
   - example_heatmap
   - example_pca
   - example_plsda
+  - key_correspondence_date
+  - hypothesis_hit_1_protein
+  - hypothesis_hit_1_relevance
+  - hypothesis_hit_1_evidence
+  - hypothesis_hit_2_protein
+  - hypothesis_hit_2_relevance
+  - hypothesis_hit_2_evidence
 
 unresolved_token_pattern: "\\{\\{\\s*[a-zA-Z0-9_]+\\s*\\}\\}"

@@ -89,6 +89,26 @@ results_report_fields:
   source: json_bundle
   file: workflow/scripts/python/docs/results_report_fields.json
 
+significant_proteins_table_md:
+  source: json_file
+  file: workflow/scripts/python/docs/results_report_fields.json
+  path: significant_proteins_table_md
+
+significant_hits_details_md:
+  source: json_file
+  file: workflow/scripts/python/docs/results_report_fields.json
+  path: significant_hits_details_md
+
+figure_browser_sections_md:
+  source: json_file
+  file: workflow/scripts/python/docs/results_report_fields.json
+  path: figure_browser_sections_md
+
+project_specific_visual_observations_md:
+  source: json_file
+  file: workflow/scripts/python/docs/results_report_fields.json
+  path: project_specific_visual_observations_md
+
 execution_report_fields:
   source: json_bundle
   file: workflow/scripts/python/docs/execution_report_fields.json
@@ -102,6 +122,16 @@ comparison_count:
   source: json_file
   file: workflow/scripts/python/docs/statistics_summary.json
   path: comparison_count
+
+comparison_overview_table_md:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: comparison_overview_table_md
+
+significant_hit_count_table_md:
+  source: json_file
+  file: workflow/scripts/python/docs/statistics_summary.json
+  path: significant_hit_count_table_md
 
 strongest_nominal_comparison:
   source: json_file
@@ -117,6 +147,11 @@ weakest_nominal_comparison:
   source: json_file
   file: workflow/scripts/python/docs/statistics_summary.json
   path: weakest_nominal_comparison
+
+generated_comparisons_md:
+  source: json_file
+  file: workflow/scripts/python/docs/execution_report_fields.json
+  path: generated_comparisons_md
 
 weakest_comparison:
   source: json_file
@@ -153,25 +188,20 @@ final_run_status:
   file: workflow/scripts/python/docs/run_summary.json
   path: final_run_status
 
-comparison_1_label:
+sample_groups_table_md:
   source: json_file
   file: workflow/scripts/python/docs/metadata_summary.json
-  path: comparisons.0.comparison_id
+  path: sample_groups_table_md
 
-comparison_2_label:
+requested_comparisons_table_md:
   source: json_file
   file: workflow/scripts/python/docs/metadata_summary.json
-  path: comparisons.1.comparison_id
+  path: requested_comparisons_table_md
 
-comparison_3_label:
+expected_comparisons_table_md:
   source: json_file
   file: workflow/scripts/python/docs/metadata_summary.json
-  path: comparisons.2.comparison_id
-
-comparison_4_label:
-  source: json_file
-  file: workflow/scripts/python/docs/metadata_summary.json
-  path: comparisons.3.comparison_id
+  path: expected_comparisons_table_md
 
 issues_and_resolutions:
   source: run_notes

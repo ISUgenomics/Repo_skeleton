@@ -347,118 +347,17 @@ requested_comparison_count:
   scope: 02_Metadata.md
   placeholder: "[Requested comparison count]"
   required: false
-
-comparison_1:
+sample_groups_table_md:
+  scope: 02_Metadata.md
+  placeholder: "[Sample groups table markdown]"
+  required: false
+requested_comparisons_table_md:
+  scope: 02_Metadata.md
+  placeholder: "[Requested comparisons table markdown]"
+  required: false
+expected_comparisons_table_md:
   scope: README.md
-  placeholder: "[Comparison 1]"
-  required: false
-comparison_1_interpretation:
-  scope: README.md
-  placeholder: "[Comparison 1 interpretation]"
-  required: false
-comparison_1_group_size:
-  scope: README.md
-  placeholder: "[Comparison 1 group size]"
-  required: false
-comparison_2:
-  scope: README.md
-  placeholder: "[Comparison 2]"
-  required: false
-comparison_2_interpretation:
-  scope: README.md
-  placeholder: "[Comparison 2 interpretation]"
-  required: false
-comparison_2_group_size:
-  scope: README.md
-  placeholder: "[Comparison 2 group size]"
-  required: false
-comparison_3:
-  scope: README.md
-  placeholder: "[Comparison 3]"
-  required: false
-comparison_3_interpretation:
-  scope: README.md
-  placeholder: "[Comparison 3 interpretation]"
-  required: false
-comparison_3_group_size:
-  scope: README.md
-  placeholder: "[Comparison 3 group size]"
-  required: false
-comparison_4:
-  scope: README.md
-  placeholder: "[Comparison 4]"
-  required: false
-comparison_4_interpretation:
-  scope: README.md
-  placeholder: "[Comparison 4 interpretation]"
-  required: false
-comparison_4_group_size:
-  scope: README.md
-  placeholder: "[Comparison 4 group size]"
-  required: false
-comparison_1_id:
-  scope: global
-  placeholder: "[Comparison 1 ID]"
-  required: false
-comparison_1_grouping_column:
-  scope: global
-  placeholder: "[Comparison 1 grouping column]"
-  required: false
-comparison_1_group1:
-  scope: global
-  placeholder: "[Comparison 1 group 1]"
-  required: false
-comparison_1_group2:
-  scope: global
-  placeholder: "[Comparison 1 group 2]"
-  required: false
-comparison_2_id:
-  scope: global
-  placeholder: "[Comparison 2 ID]"
-  required: false
-comparison_2_grouping_column:
-  scope: global
-  placeholder: "[Comparison 2 grouping column]"
-  required: false
-comparison_2_group1:
-  scope: global
-  placeholder: "[Comparison 2 group 1]"
-  required: false
-comparison_2_group2:
-  scope: global
-  placeholder: "[Comparison 2 group 2]"
-  required: false
-comparison_3_id:
-  scope: global
-  placeholder: "[Comparison 3 ID]"
-  required: false
-comparison_3_grouping_column:
-  scope: global
-  placeholder: "[Comparison 3 grouping column]"
-  required: false
-comparison_3_group1:
-  scope: global
-  placeholder: "[Comparison 3 group 1]"
-  required: false
-comparison_3_group2:
-  scope: global
-  placeholder: "[Comparison 3 group 2]"
-  required: false
-comparison_4_id:
-  scope: global
-  placeholder: "[Comparison 4 ID]"
-  required: false
-comparison_4_grouping_column:
-  scope: global
-  placeholder: "[Comparison 4 grouping column]"
-  required: false
-comparison_4_group1:
-  scope: global
-  placeholder: "[Comparison 4 group 1]"
-  required: false
-comparison_4_group2:
-  scope: global
-  placeholder: "[Comparison 4 group 2]"
+  placeholder: "[Expected comparisons table markdown]"
   required: false
 
 input_format:
@@ -526,6 +425,18 @@ comparison_count:
   scope: 04_Results.md
   placeholder: "[Comparison count]"
   required: false
+comparison_overview_table_md:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Comparison overview table markdown]"
+  required: false
+significant_hit_count_table_md:
+  scope: workflow/02_statistics/README.md
+  placeholder: "[Significant hit count table markdown]"
+  required: false
+generated_comparisons_md:
+  scope: workflow/03_visualization/README.md
+  placeholder: "[Generated comparisons markdown]"
+  required: false
 qc_samples_excluded_summary:
   scope: 04_Results.md
   placeholder: "[QC excluded samples summary]"
@@ -546,86 +457,6 @@ short_statistical_summary:
   scope: 04_Results.md
   placeholder: "[Short statistical summary]"
   required: false
-comparison_1_label:
-  scope: global
-  placeholder: "[Comparison 1 label]"
-  required: false
-comparison_1_file:
-  scope: global
-  placeholder: "[Comparison 1 file]"
-  required: false
-comparison_1_output_file:
-  scope: global
-  placeholder: "[Comparison 1 output file]"
-  required: false
-comparison_1_p_hits:
-  scope: global
-  placeholder: "[Comparison 1 p hits]"
-  required: false
-comparison_1_q_hits:
-  scope: global
-  placeholder: "[Comparison 1 q hits]"
-  required: false
-comparison_2_label:
-  scope: global
-  placeholder: "[Comparison 2 label]"
-  required: false
-comparison_2_file:
-  scope: global
-  placeholder: "[Comparison 2 file]"
-  required: false
-comparison_2_output_file:
-  scope: global
-  placeholder: "[Comparison 2 output file]"
-  required: false
-comparison_2_p_hits:
-  scope: global
-  placeholder: "[Comparison 2 p hits]"
-  required: false
-comparison_2_q_hits:
-  scope: global
-  placeholder: "[Comparison 2 q hits]"
-  required: false
-comparison_3_label:
-  scope: global
-  placeholder: "[Comparison 3 label]"
-  required: false
-comparison_3_file:
-  scope: global
-  placeholder: "[Comparison 3 file]"
-  required: false
-comparison_3_output_file:
-  scope: global
-  placeholder: "[Comparison 3 output file]"
-  required: false
-comparison_3_p_hits:
-  scope: global
-  placeholder: "[Comparison 3 p hits]"
-  required: false
-comparison_3_q_hits:
-  scope: global
-  placeholder: "[Comparison 3 q hits]"
-  required: false
-comparison_4_label:
-  scope: global
-  placeholder: "[Comparison 4 label]"
-  required: false
-comparison_4_file:
-  scope: global
-  placeholder: "[Comparison 4 file]"
-  required: false
-comparison_4_output_file:
-  scope: global
-  placeholder: "[Comparison 4 output file]"
-  required: false
-comparison_4_p_hits:
-  scope: global
-  placeholder: "[Comparison 4 p hits]"
-  required: false
-comparison_4_q_hits:
-  scope: global
-  placeholder: "[Comparison 4 q hits]"
-  required: false
 strongest_nominal_comparison:
   scope: 04_Results.md
   placeholder: "[Strongest nominal comparison]"
@@ -637,6 +468,22 @@ weakest_nominal_comparison:
 qvalue_summary:
   scope: 04_Results.md
   placeholder: "[Q-value summary]"
+  required: false
+significant_proteins_table_md:
+  scope: 04_Results.md
+  placeholder: "[Significant proteins table markdown]"
+  required: false
+significant_hits_details_md:
+  scope: 04_Results.md
+  placeholder: "[Significant hits details markdown]"
+  required: false
+figure_browser_sections_md:
+  scope: 04_Results.md
+  placeholder: "[Figure browser sections markdown]"
+  required: false
+project_specific_visual_observations_md:
+  scope: 04_Results.md
+  placeholder: "[Project specific visual observations markdown]"
   required: false
 fold_change_balance_summary:
   scope: 04_Results.md
@@ -665,66 +512,6 @@ example_pca:
 example_plsda:
   scope: 04_Results.md
   placeholder: "[Example PLS-DA plot]"
-  required: false
-comparison_1_summary:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 summary]"
-  required: false
-comparison_1_group_label_a:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 group label A]"
-  required: false
-comparison_1_group_label_b:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 group label B]"
-  required: false
-comparison_1_sample_ids_a:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 sample IDs A]"
-  required: false
-comparison_1_sample_ids_b:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 sample IDs B]"
-  required: false
-comparison_1_example_accession:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 example accession]"
-  required: false
-comparison_1_example_fold_change:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 example fold change]"
-  required: false
-comparison_1_example_significant:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 example significant]"
-  required: false
-comparison_1_example_description:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 example description]"
-  required: false
-comparison_1_volcano_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 volcano PNG]"
-  required: false
-comparison_1_heatmap_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 heatmap PNG]"
-  required: false
-comparison_1_pca_pc1_pc2_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 PCA PC1 PC2 PNG]"
-  required: false
-comparison_1_pca_pc1_pc3_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 PCA PC1 PC3 PNG]"
-  required: false
-comparison_1_pca_pc2_pc3_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 PCA PC2 PC3 PNG]"
-  required: false
-comparison_1_plsda_png:
-  scope: 04_Results.md
-  placeholder: "[Comparison 1 PLS-DA PNG]"
   required: false
 plot_family_summary:
   scope: 04_Results.md
@@ -793,6 +580,34 @@ example_annotation_1:
 example_annotation_2:
   scope: 04_Results.md
   placeholder: "[Example annotation 2]"
+  required: false
+hypothesis_screening_note:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis screening note]"
+  required: false
+hypothesis_hit_1_protein:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 1 protein]"
+  required: false
+hypothesis_hit_1_relevance:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 1 relevance]"
+  required: false
+hypothesis_hit_1_evidence:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 1 evidence]"
+  required: false
+hypothesis_hit_2_protein:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 2 protein]"
+  required: false
+hypothesis_hit_2_relevance:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 2 relevance]"
+  required: false
+hypothesis_hit_2_evidence:
+  scope: 04_Results.md
+  placeholder: "[Hypothesis hit 2 evidence]"
   required: false
 concise_results_conclusion:
   scope: 04_Results.md

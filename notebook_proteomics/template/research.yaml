@@ -21,8 +21,8 @@ inputs:
     - workflow/scripts/python/docs/significant_hits_summary.json
     - workflow/scripts/python/docs/results_report_fields.json
   doc_targets:
+    - 04_Results.md
     - 08_References.md
-    - 06_Discussion.md
 
 focus_areas:
   - name: system_or_tissue_background
@@ -33,6 +33,7 @@ focus_areas:
       - tissue_or_material
       - organism_or_system
       - platform
+      - key_correspondence_excerpt
   - name: condition_or_treatment_background
     target_section: 08_References.md
     subsection: Condition, Treatment, or Perturbation Context
@@ -43,6 +44,7 @@ focus_areas:
       - secondary_factor_name
       - secondary_factor_levels
       - biological_question
+      - key_correspondence_excerpt
   - name: project_specific_biology
     target_section: 08_References.md
     subsection: Project-Specific Biology
@@ -53,16 +55,28 @@ focus_areas:
       - example_annotation_1
       - example_annotation_2
       - main_biological_question
-  - name: results_support
-    target_section: 06_Discussion.md
-    subsection: Supporting evidence
+      - significant_hits_details_md
+  - name: hypothesis_screening_table
+    target_section: 04_Results.md
+    subsection: Figure Browser
     heading_level: 2
+    minimum_rows: 6
+    max_rows: 12
     query_inputs:
       - strongest_comparison
       - weakest_comparison
-      - example_proteins_or_pathways
+      - significant_hits_details_md
+      - requested_comparison_scope
+      - main_biological_question
       - primary_question_interpretation
-      - context_specific_interpretation
+      - key_correspondence_excerpt
+    requirements:
+      - review all nominally significant proteins across the requested contrasts before deciding what to include
+      - keep the table selective, but do not arbitrarily cap it at one or two rows when several defensible candidates exist
+      - keep wording cautious and hypothesis-focused
+      - treat project relevance broadly across diet, inflammatory challenge, oxidative stress, metabolism, and tissue-remodeling context when those themes match the project background
+      - provide title-linked literature references when a row is filled
+      - if support is indirect, label it as suggested literature evidence rather than direct validation
   - name: local_topic_context
     target_section: 08_References.md
     subsection: Local Topic Context
@@ -74,6 +88,7 @@ focus_areas:
       - project_title
 
 policies:
+  discussion: false
   live_research_required: true
   allowed_source_domains:
     - pubmed.ncbi.nlm.nih.gov
@@ -90,17 +105,23 @@ policies:
     - official repository or standards pages
   requirements:
     - add direct source links for every cited item
+    - link the paper title itself rather than a generic source label
     - keep methods references distinct from biological-context references
     - do not overstate nominal p-value findings as validated discoveries
     - if protein-level support is weak or indirect, label it as candidate literature support
+    - prefer project-specific semantic labels from correspondence or context over generic metadata labels when both are available
+    - preserve stronger existing project-specific wording on reruns unless it is contradicted by validated evidence
+    - improve figure-browser observations from actual output patterns and curated protein relevance, rather than leaving the docs-phase baseline unchanged
   insertion_rules:
     - update only the research-oriented sections declared in this file
     - preserve unresolved placeholders when no strong candidate is found
     - keep candidate references concise and validation-friendly
+    - do not replace specific biological framing with generic factor labels such as treatment if the project context defines a richer semantic label
 
 outputs:
   literature_candidates_json: workflow/scripts/python/docs/literature_candidates.json
   literature_candidates_schema: template/literature_candidates.schema.json
   updated_docs:
+    - 04_Results.md
+    - 05_Introduction.md
     - 08_References.md
-    - 06_Discussion.md
